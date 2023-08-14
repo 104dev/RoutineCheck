@@ -1,21 +1,32 @@
-//
-//  ContentView.swift
-//  RoutineCheck
-//
-//  Created by jushiro watanabe on 2023/08/15.
-//
-
 import SwiftUI
 
+
 struct ContentView: View {
-    var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
+        
+    @StateObject var taskViewModel = TaskViewModel()
+    @StateObject var activityViewModel = ActivityViewModel()
+    @StateObject var projectViewModel = ProjectViewModel()
+    
+    init(){
+        let center = UNUserNotificationCenter.current()
+        center.requestAuthorization(options: .alert) { granted, error in
+            if granted {
+                print("許可されました！")
+            }else{
+                print("拒否されました...")
+            }
         }
-        .padding()
+    }
+    
+    var body: some View {
+        NavigationStack {
+            VStack{
+                TabBarView()
+            }
+        }
+        .environmentObject(taskViewModel)
+        .environmentObject(activityViewModel)
+        .environmentObject(projectViewModel)
     }
 }
 
@@ -24,3 +35,4 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
+
