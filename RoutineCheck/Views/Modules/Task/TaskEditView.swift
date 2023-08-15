@@ -40,6 +40,16 @@ struct TaskEditView: View {
                             DatePicker("実行開始", selection: $startDate, in: ...endDate, displayedComponents: [.date, .hourAndMinute])
                             DatePicker("終了予定", selection: $endDate, in: startDate..., displayedComponents: [.date, .hourAndMinute])
                             DatePicker("期日", selection: $expiredDate, in: endDate..., displayedComponents: [.date, .hourAndMinute])
+                                .onAppear(){
+                                    let calendar = Calendar.current
+                                    let oneWeekLater = calendar.date(byAdding: .weekOfYear, value: 1, to: Date()) ?? Date()
+                                    let components: Set<Calendar.Component> = [.year, .month, .day, .hour, .minute, .second]
+                                    var dateComponents = calendar.dateComponents(components, from: oneWeekLater)
+                                    dateComponents.hour = 23
+                                    dateComponents.minute = 59
+                                    expiredDate = calendar.date(from: dateComponents) ?? Date()
+                                }
+                            
                         }
                         if id == nil{
                             Section{
