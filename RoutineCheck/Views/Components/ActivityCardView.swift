@@ -5,12 +5,13 @@ struct ActivityCardView: View {
     
     var body: some View {
         VStack{
-            HStack{
+            HStack(spacing: 0){
                 Rectangle()
                     .frame(width: 10)
                     .foregroundColor(Color.blue)
                     .cornerRadius(20, corners: [.topLeft, .bottomLeft])
                 VStack(alignment: .leading){
+                    Spacer()
                     HStack{
                         if let projectName = activity.project?.name as? String {
                             Text(projectName)
@@ -30,6 +31,7 @@ struct ActivityCardView: View {
                                 .background(Color.gray)
                                 .cornerRadius(5)
                         }
+                        Spacer()
                     }
                     if let desc = activity.desc{
                         Text(desc)
@@ -45,16 +47,17 @@ struct ActivityCardView: View {
                     Text("2023年7月23日 22:14")
                         .padding(.top , 1)
                         .foregroundColor(Color.gray)
+                    Spacer()
                 }
                 .padding(.horizontal,10)
+                .background(Color.white)
                 Spacer()
             }
-            .background(Color.white)
             .frame(height: 120)
         }
         .clipped()
         .shadow(color: Color.black.opacity(0.5), radius: 3, x: 0, y: 2)
-        .background(Color.blue)
+        .background(Color.clear)
         .padding(.horizontal, 10)
     }
 }

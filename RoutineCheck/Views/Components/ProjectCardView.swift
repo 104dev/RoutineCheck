@@ -7,7 +7,7 @@ struct ProjectCardView: View {
     
     var body: some View {
         VStack{
-            HStack{
+            HStack(spacing: 0){
                 Rectangle()
                     .frame(width: 10)
                     .foregroundColor(Color.blue)
@@ -33,14 +33,14 @@ struct ProjectCardView: View {
                     }
                 }
                 .padding(10)
+                .background(Color.white)
                 Spacer()
             }
-            .background(Color.white)
             .frame(maxHeight: 160)
         }
         .clipped()
         .shadow(color: Color.black.opacity(0.5), radius: 3, x: 0, y: 2)
-        .background(Color.blue)
+        .background(Color.clear)
         .padding(.horizontal, 10)
         .onAppear(){
             completedTaskPercentage = ProjectViewModel().completedTaskPercentage(for: project)
