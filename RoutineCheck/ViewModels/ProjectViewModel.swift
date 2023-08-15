@@ -71,6 +71,37 @@ class ProjectViewModel: ObservableObject {
         }
     }
     
+    func createProject (name: String, desc: String){
+        let newProject = Project(context: viewContext)
+        newProject.name = name
+        newProject.desc = desc
+        newProject.created_dt = Date()
+        do {
+            try viewContext.save()
+            fetchProjects()
+        } catch {
+            let nsError = error as NSError
+            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+        }
+    }
+    
+    func updateProject (uuid: UUID, name: String, desc: String) {
+        let request: NSFetchRequest<Project> = Project.fetchRequest()
+        request.predicate = NSPredicate(format: "id == %@", uuid as CVarArg)
+        do {
+            let fetchedProjects = try viewContext.fetch(request)
+            if let targetProject = fetchedProjects.first {
+                targetProject.name = name
+                targetProject.desc = desc
+            }
+            try viewContext.save()
+            fetchProjects()
+        } catch {
+            let nsError = error as NSError
+            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+        }
+    }
+    
     func deleteProject(_ project: Project) {
         viewContext.delete(project)
         do {

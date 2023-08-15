@@ -1,13 +1,58 @@
 import SwiftUI
 
 struct ProjectEditView: View {
+    
+    @Binding var isModalPresented: Bool
+    let project: Project?
+    @State private var title: String = ""
+    @State private var desc: String = ""
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack{
+            TextField("タイトルを記入", text: $title)
+                .padding()
+                .font(.title)
+            TextEditor(text: $desc)
+                .padding()
+            HStack {
+                Button("キャンセル", action: {
+                    isModalPresented.toggle()
+                })
+                .padding()
+                Button("保存", action: {
+                    saveProject()
+                })
+                .padding()
+            }
+        }
+        .background(Color(.systemGray6))
+        .onAppear {
+            setupInitialValues()
+        }
     }
-}
+    
+    private func setupInitialValues() {
+            guard let project = project else { return }
+            title = project.name ?? ""
+            desc = project.desc ?? ""
+    }
+    
+    private func saveProject() {
+          guard let project = project else {
+              ProjectViewModel().createProject(
+                  name: title,
+                  desc: desc
+              )
+              isModalPresented.toggle()
+              return
+          }
 
-struct ProjectEditView_Previews: PreviewProvider {
-    static var previews: some View {
-        ProjectEditView()
-    }
+          ProjectViewModel().updateProject(
+              uuid: project.id!,
+              name: title,
+              desc: desc
+          )
+          isModalPresented.toggle()
+      }
+
 }
