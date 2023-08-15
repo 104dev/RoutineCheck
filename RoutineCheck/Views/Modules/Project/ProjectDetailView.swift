@@ -168,7 +168,7 @@ struct ProjectDetailView: View {
                                     Circle()
                                         .foregroundColor(.blue)
                                         .frame(width: 32, height: 32)
-                                    Image(systemName: "plus")
+                                    Image(systemName: "trash.fill")
                                         .foregroundColor(.white)
                                         .font(.system(size: 12))
                                 }
@@ -189,7 +189,7 @@ struct ProjectDetailView: View {
                                 if taskCount > 0 || activityCount > 0 {
                                     return ActionSheet(
                                         title: Text("プロジェクトの削除"),
-                                        message: Text("このタスクには \(taskCount) 件のタスクと \(activityCount) 件のアクティビティが関連づけられています。 関連づけられたアイテムごと削除しますか？"),
+                                        message: Text("このプロジェクトには \(taskCount) 件のタスクと \(activityCount) 件のアクティビティが関連づけられています。 関連づけられたアイテムごと削除しますか？"),
                                         buttons: [
                                             .destructive(Text("関連アイテムごと削除"), action: {
                                                 ProjectViewModel().deleteWithRelatedItems(project)
