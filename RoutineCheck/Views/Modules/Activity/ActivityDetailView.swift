@@ -10,6 +10,12 @@ struct ActivityDetailView: View {
     @State var isActivityDeleteActionSheet = false
     @Environment(\.presentationMode) var presentationMode
     
+    var dateFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "YYYY/MM/dd HH:mm"
+        return formatter
+    }
+    
     var body: some View {
         ZStack{
             VStack{
@@ -32,9 +38,34 @@ struct ActivityDetailView: View {
                             Text("アクティビティの説明はありません。").foregroundColor(Color.gray)
                         }
                     }
-                }
-                .pickerStyle(.segmented)
-                .padding()
+                    Section(){
+                        HStack{
+                            Text("作成日時")
+                            Spacer()
+                            if let createdDate = activity.created_dt {
+                                Text(dateFormatter.string(from: createdDate))
+                            } else {
+                                Text("No data")
+                            }
+                        }
+                        HStack{
+                            Text("最終更新日")
+                            Spacer()
+                            if let updatedDate = activity.updated_dt {
+                                Text(dateFormatter.string(from: updatedDate))
+                            } else {
+                                Text("No data")
+                            }
+                        }
+
+                    }
+
+                }.frame( maxWidth: .infinity)
+                    .edgesIgnoringSafeArea(.all)
+                    .listStyle(GroupedListStyle())
+                
+                    .pickerStyle(.segmented)
+                    .padding()
             }.navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .principal) {
