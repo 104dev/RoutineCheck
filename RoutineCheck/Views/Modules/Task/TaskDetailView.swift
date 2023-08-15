@@ -307,21 +307,24 @@ struct TaskDetailView: View {
             TaskEditView(
                 isModalPresented: $isTaskEditModalPresented,
                 id: task.id!,
-                title: task.name!,
-                desc: task.desc!,
-                startDate: task.scheduled_begin_dt!,
-                endDate: task.scheduled_end_dt!,
-                expiredDate: task.expired_dt!
-            ).navigationBarTitle("タスクをコピーして新規作成", displayMode: .inline)
-        })
-        .sheet(isPresented: $isTaskCreateByCopyModalPresented, content: {
-            TaskEditView(
-                isModalPresented: $isTaskEditModalPresented,
                 title: task.name ?? "",
                 desc: task.desc ?? "",
                 startDate: task.scheduled_begin_dt ?? Date(),
                 endDate: task.scheduled_end_dt ?? Date(),
-                expiredDate: task.expired_dt ?? Date()
+                expiredDate: task.expired_dt ?? Date(),
+                status: task.status ?? "scheduled"
+            )
+        })
+        .sheet(isPresented: $isTaskCreateByCopyModalPresented, content: {
+            TaskEditView(
+                isModalPresented: $isTaskCreateByCopyModalPresented,
+                title: task.name ?? "",
+                desc: task.desc ?? "",
+                startDate: task.scheduled_begin_dt ?? Date(),
+                endDate: task.scheduled_end_dt ?? Date(),
+                expiredDate: task.expired_dt ?? Date(),
+                status: task.status ?? "scheduled",
+                project: task.project
             )
         })
         .sheet(isPresented: $isActivityCreateModalPresented, content: {
