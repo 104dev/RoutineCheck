@@ -8,7 +8,14 @@ struct TaskDetailView: View {
     @State var isTaskEditModalPresented = false
     @State var isActivityCreateModalPresented = false
     @State var isTaskDeleteActionSheet = false
+    @State var isActivityPresented : Bool = false
     @Environment(\.presentationMode) var presentationMode
+    
+    var dateFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "YYYY/MM/dd HH:mm"
+        return formatter
+    }
     
     var body: some View {
         ZStack{
@@ -42,31 +49,78 @@ struct TaskDetailView: View {
                         HStack{
                             Text("ステータス")
                             Spacer()
+                            switch task.status {
+                            case "completed":
+                                Text("完了")
+                            case "scheduled":
+                                Text("実行予定")
+                            case "abandoned":
+                                Text("断念")
+                            case nil:
+                                Text("ステータスなし")
+                            case .some(_):
+                                Text("その他のステータス")
+                            }
                         }
                         HStack{
                             Text("開始予定")
+                            Spacer()
+                            if let scheduledBeginDate = task.scheduled_begin_dt {
+                                Text(dateFormatter.string(from: scheduledBeginDate))
+                            } else {
+                                Text("No schedule")
+                            }
                         }
                         HStack{
                             Text("終了予定")
+                            Spacer()
+                            if let scheduledEndDate = task.scheduled_end_dt {
+                                Text(dateFormatter.string(from: scheduledEndDate))
+                            } else {
+                                Text("No schedule")
+                            }
                         }
                         HStack{
                             Text("期日")
+                            Spacer()
+                            if let expiredDate = task.expired_dt {
+                                Text(dateFormatter.string(from: expiredDate))
+                            } else {
+                                Text("No expire")
+                            }
                         }
                         HStack{
                             Text("作成日時")
+                            Spacer()
+                            if let createdDate = task.created_dt {
+                                Text(dateFormatter.string(from: createdDate))
+                            } else {
+                                Text("No data")
+                            }
                         }
                         HStack{
                             Text("最終更新日")
+                            Spacer()
+                            if let updatedDate = task.updated_dt {
+                                Text(dateFormatter.string(from: updatedDate))
+                            } else {
+                                Text("No data")
+                            }
                         }
                     }
                     if let activities = task.activities?.allObjects as? [Activity], !activities.isEmpty {
                         Section(header: Text("アクティビティ一覧")) {
                             ForEach(activities, id: \.self) { activity in
-                                NavigationLink(destination: ActivityDetailView(activity: activity)){
-                                    Text(activity.name ?? "")
+                                Button {
+                                    isActivityPresented.toggle()
+                                } label: {
+                                    ActivityCardView(activity: activity)
                                         .padding(.vertical, 10)
+                                        .foregroundColor(.black)
+                                }.navigationDestination(isPresented: $isActivityPresented){
+                                    ActivityDetailView(activity: activity)
                                 }
-                            }
+                            }.listRowInsets(EdgeInsets())
                         }
                     } else {
                         Section(header: Text("アクティビティ一覧")) {
@@ -75,6 +129,9 @@ struct TaskDetailView: View {
                         }
                     }
                 }
+                .frame( maxWidth: .infinity)
+                .edgesIgnoringSafeArea(.all)
+                .listStyle(GroupedListStyle())
             }
             .padding(10)
             .background(Color(.systemGray6))
