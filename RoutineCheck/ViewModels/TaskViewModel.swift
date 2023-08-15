@@ -142,6 +142,7 @@ class TaskViewModel: ObservableObject {
     func createTask (
         name: String,
         desc: String,
+        status: String,
         scheduled_begin_dt: Date,
         scheduled_end_dt: Date,
         expired_dt: Date,
@@ -149,54 +150,63 @@ class TaskViewModel: ObservableObject {
         bulkTaskCount: Int,
         bulkInterval: Int
     ){
-        var intervalComponents: DateComponents?
-        switch bulkInterval {
-        case 1: // Daily
-            intervalComponents = DateComponents(day: 1)
-        case 2: // Weekly
-            intervalComponents = DateComponents(weekOfYear: 1)
-        case 3: // Monthly
-            intervalComponents = DateComponents(month: 1)
-        default:
-            intervalComponents = nil
-        }
+        var intervalComponents: Calendar.Component
         
         let calendar = Calendar.current
-        
-        for _ in 0..<bulkTaskCount {
+                
+        for index in 0..<bulkTaskCount + 1 {
             let newTask = Task(context: viewContext)
             newTask.name = name
             newTask.desc = desc
-            newTask.status = "scheduled"
-            newTask.scheduled_begin_dt = calendar.date(byAdding: intervalComponents ?? DateComponents(), to: scheduled_begin_dt)!
-            newTask.scheduled_end_dt = calendar.date(byAdding: intervalComponents ?? DateComponents(), to: scheduled_end_dt)!
-            newTask.expired_dt = calendar.date(byAdding: intervalComponents ?? DateComponents(), to: expired_dt)!
+            if index == 0 {
+                newTask.status = status
+            } else {
+                newTask.status = "scheduled"
+            }
+
+            print(bulkInterval)
+            switch bulkInterval {
+            case 1:
+                intervalComponents = .day
+            case 2:
+                intervalComponents = .weekOfYear
+            case 3:
+                intervalComponents = .month
+            default:
+                intervalComponents = .day
+            }
+            newTask.scheduled_begin_dt = calendar.date(byAdding: intervalComponents,
+                                                       value:index + 1, to: scheduled_begin_dt)!
+            newTask.scheduled_end_dt = calendar.date(byAdding: intervalComponents,value:index + 1, to: scheduled_end_dt)!
+            newTask.expired_dt = calendar.date(byAdding: intervalComponents,value:index + 1, to: expired_dt)!
             newTask.created_dt = Date()
             newTask.updated_dt = Date()
             if let projectToAssociate = project {
                 newTask.project = projectToAssociate
                 project?.addToTasks(newTask)
             }
-            
-            do {
-                try viewContext.save()
-                fetchTasks()
-                ProjectViewModel().fetchProjects()
-            } catch {
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-            }
+            viewContext.insert(newTask)
         }
+        
+        do {
+            try viewContext.save()
+        } catch {
+            let nsError = error as NSError
+            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+        }
+        fetchTasks()
+        ProjectViewModel().fetchProjects()
+
     }
     
     func updateTask (
         uuid: UUID,
         name: String,
         desc: String,
+        status: String,
         scheduled_begin_dt: Date,
         scheduled_end_dt: Date,
-        expired_dt: Date,
-        status: String
+        expired_dt: Date
     ){
         let fetchRequest: NSFetchRequest<Task> = Task.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "id == %@", uuid as CVarArg)
