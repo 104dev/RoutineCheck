@@ -61,5 +61,15 @@ class ActivityViewModel: ObservableObject {
             fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }
     }
+    
+    func deleteActivity(_ activity: Activity) {
+        viewContext.delete(activity)
+        do {
+            try viewContext.save()
+            fetchActivities()
+        } catch {
+            print("Error deleting object: \(error)")
+        }
+    }
 }
 

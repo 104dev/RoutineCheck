@@ -38,18 +38,70 @@ class ProjectViewModel: ObservableObject {
         return Double(completedTasks.count) / Double(tasks.count)
     }
     
-    func storeProject (viewContext :NSManagedObjectContext){
+    func hasRelatedItems(project: Project) -> Bool {
+        if let tasks = project.tasks?.allObjects, !tasks.isEmpty {
+            return true
+        }
+
+        if let activities = project.activities?.allObjects, !activities.isEmpty {
+            return true
+        }
+
+        return false
+    }
+    
+    func numberOfTasks(for project: Project) -> Int {
+        return project.tasks?.count ?? 0
+    }
+
+    func numberOfActivities(for project: Project) -> Int {
+        return project.activities?.count ?? 0
+    }
+    
+    func storeProject (){
         let newTask = Project(context: viewContext)
         newTask.created_dt = Date()
 
         do {
             try viewContext.save()
+            /*fetchProjects()*/
         } catch {
             let nsError = error as NSError
             fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }
     }
     
+    func deleteProject(_ project: Project) {
+        viewContext.delete(project)
+        do {
+            try viewContext.save()
+            fetchProjects()
+        } catch {
+            print("Error deleting object: \(error)")
+        }
+    }
+    
+    func deleteWithRelatedItems(_ project: Project) {
+        if let tasks = project.tasks?.allObjects as? [Task] {
+            for task in tasks {
+                viewContext.delete(task)
+            }
+        }
+
+        if let activities = project.activities?.allObjects as? [Activity] {
+            for activity in activities {
+                viewContext.delete(activity)
+            }
+        }
+
+        viewContext.delete(project)
+        do {
+            try viewContext.save()
+            fetchProjects()
+        } catch {
+            print("Error deleting object: \(error)")
+        }
+    }
     
 }
 
