@@ -48,7 +48,7 @@ class TaskViewModel: ObservableObject {
         var predicates = [NSPredicate]()
         
         if let name = name {
-            let namePredicate = NSPredicate(format: "name == %@", name)
+            let namePredicate = NSPredicate(format: "name CONTAINS[c] %@", name)
             predicates.append(namePredicate)
         }
         

@@ -27,7 +27,7 @@ class ActivityViewModel: ObservableObject {
         let request = NSFetchRequest<Activity>(entityName: "Activity")
         var predicates = [NSPredicate]()
         if let name = name {
-            let namePredicate = NSPredicate(format: "name == %@", name)
+            let namePredicate = NSPredicate(format: "name CONTAINS[c] %@", name)
             predicates.append(namePredicate)
         }
         let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
