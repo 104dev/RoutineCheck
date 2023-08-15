@@ -19,7 +19,7 @@ struct TaskCardView: View {
     
     var body: some View {
         VStack{
-            HStack{
+            HStack(spacing: 0){
                 Rectangle()
                     .frame(width: 10)
                     .foregroundColor(Color.blue)
@@ -78,14 +78,14 @@ struct TaskCardView: View {
                     .foregroundColor(Color.gray)
                 }
                 .padding(10)
+                .background(Color.white)
                 Spacer()
             }
-            .background(Color.white)
             .frame(height: 160)
         }
         .clipped()
         .shadow(color: Color.black.opacity(0.5), radius: 3, x: 0, y: 2)
-        .background(Color.blue)
+        .background(Color.clear)
         .padding(.horizontal, 10)
     }
 }
