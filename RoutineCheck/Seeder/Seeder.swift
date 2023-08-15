@@ -22,6 +22,7 @@ class Seeder {
                 "status": "scheduled",
                 "scheduled_begin_dt" : Calendar.current.date(from: DateComponents(year: 2023, month: 7, day: 27, hour: 12, minute: 30)),
                 "scheduled_end_dt" : Calendar.current.date(from: DateComponents(year: 2023, month: 7, day: 27, hour: 13, minute: 30)),
+                "expired_dt" : Calendar.current.date(from: DateComponents(year: 2023, month: 8, day: 3, hour: 23, minute: 59)),
                 "created_dt" : Date()
             ],
             [
@@ -31,6 +32,7 @@ class Seeder {
                 "status": "completed",
                 "scheduled_begin_dt" : Calendar.current.date(from: DateComponents(year: 2023, month: 7, day: 28, hour: 12, minute: 30)),
                 "scheduled_end_dt" : Calendar.current.date(from: DateComponents(year: 2023, month: 7, day: 28, hour: 13, minute: 30)),
+                "expired_dt" : Calendar.current.date(from: DateComponents(year: 2023, month: 8, day: 4, hour: 23, minute: 59)),
                 "created_dt" : Date()
             ],
             [
@@ -40,6 +42,7 @@ class Seeder {
                 "status": "abandoned",
                 "scheduled_begin_dt" : Calendar.current.date(from: DateComponents(year: 2023, month: 7, day: 29, hour: 12, minute: 30)),
                 "scheduled_end_dt" : Calendar.current.date(from: DateComponents(year: 2023, month: 7, day: 29, hour: 13, minute: 30)),
+                "expired_dt" : Calendar.current.date(from: DateComponents(year: 2023, month: 8, day: 5, hour: 23, minute: 59)),
                 "created_dt" : Date()
             ]
         ]
@@ -70,6 +73,8 @@ class Seeder {
             task.scheduled_begin_dt = taskSeeder["scheduled_begin_dt"] as? Date
             task.scheduled_end_dt = taskSeeder["scheduled_end_dt"] as? Date
             task.created_dt = taskSeeder["created_dt"] as? Date
+            task.updated_dt = taskSeeder["created_dt"] as? Date
+            task.expired_dt = taskSeeder["expired_dt"] as? Date
             task.project = project
             project.addToTasks(task)
             
