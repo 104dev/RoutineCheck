@@ -241,8 +241,7 @@ struct ProjectDetailView: View {
         }.sheet(isPresented: $isTaskCreateModalPresented, content: {
             TaskEditView(
                 isModalPresented:$isTaskCreateModalPresented,
-                project: project,
-                task: nil
+                project: project
             )
         })
         .sheet(isPresented: $isActivityCreateModalPresented, content: {

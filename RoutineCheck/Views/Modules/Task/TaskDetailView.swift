@@ -6,6 +6,7 @@ struct TaskDetailView: View {
     
     @State var taskFloetBtnSelected = false
     @State var isTaskEditModalPresented = false
+    @State var isTaskCreateByCopyModalPresented = false
     @State var isActivityCreateModalPresented = false
     @State var isTaskDeleteActionSheet = false
     @State var isActivityPresented : Bool = false
@@ -174,6 +175,31 @@ struct TaskDetailView: View {
                         HStack{
                             Spacer()
                             Button(action:{
+                                isTaskCreateByCopyModalPresented.toggle()
+                            } ) {
+                                Spacer()
+                                ZStack{
+                                    Circle()
+                                        .foregroundColor(.blue)
+                                        .frame(width: 32, height: 32)
+                                    Image(systemName: "doc.on.clipboard")
+                                        .foregroundColor(.white)
+                                        .font(.system(size: 12))
+                                }
+                                Text("タスクをコピーして新規作成")
+                                    .foregroundColor(.white)
+                                    .font(.caption)
+                                    .padding(4)
+                                    .frame(maxWidth: .infinity)
+                                    .background(Color.blue)
+                                    .cornerRadius(3)
+                            }
+                            .frame(width: 240, height: 20)
+                            .padding(EdgeInsets(top: 0, leading: 0, bottom: 16.0, trailing: 16.0))
+                        }
+                        HStack{
+                            Spacer()
+                            Button(action:{
                                 isActivityCreateModalPresented.toggle()
                             } ) {
                                 Spacer()
@@ -279,8 +305,23 @@ struct TaskDetailView: View {
         }
         .sheet(isPresented: $isTaskEditModalPresented, content: {
             TaskEditView(
-                isModalPresented:$isTaskEditModalPresented,
-                task: task
+                isModalPresented: $isTaskEditModalPresented,
+                id: task.id!,
+                title: task.name!,
+                desc: task.desc!,
+                startDate: task.scheduled_begin_dt!,
+                endDate: task.scheduled_end_dt!,
+                expiredDate: task.expired_dt!
+            ).navigationBarTitle("タスクをコピーして新規作成", displayMode: .inline)
+        })
+        .sheet(isPresented: $isTaskCreateByCopyModalPresented, content: {
+            TaskEditView(
+                isModalPresented: $isTaskEditModalPresented,
+                title: task.name ?? "",
+                desc: task.desc ?? "",
+                startDate: task.scheduled_begin_dt ?? Date(),
+                endDate: task.scheduled_end_dt ?? Date(),
+                expiredDate: task.expired_dt ?? Date()
             )
         })
         .sheet(isPresented: $isActivityCreateModalPresented, content: {
