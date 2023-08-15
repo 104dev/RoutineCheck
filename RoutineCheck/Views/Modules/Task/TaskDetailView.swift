@@ -7,7 +7,8 @@ struct TaskDetailView: View {
     @State var taskFloetBtnSelected = false
     @State var isTaskEditModalPresented = false
     @State var isActivityCreateModalPresented = false
-
+    @State var isTaskDeleteActionSheet = false
+    @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
         ZStack{
@@ -102,7 +103,7 @@ struct TaskDetailView: View {
                                         .foregroundColor(.white)
                                         .font(.system(size: 12))
                                 }
-                                Text("このタスクを編集")
+                                Text("タスクを編集")
                                     .foregroundColor(.white)
                                     .font(.caption)
                                     .padding(4)
@@ -138,7 +139,64 @@ struct TaskDetailView: View {
                             .frame(width: 240, height: 20)
                             .padding(EdgeInsets(top: 0, leading: 0, bottom: 16.0, trailing: 16.0))
                         }
-                        
+                        HStack{
+                            Spacer()
+                            Button(action:{
+                                isTaskDeleteActionSheet.toggle()
+                            } ) {
+                                Spacer()
+                                ZStack{
+                                    Circle()
+                                        .foregroundColor(.blue)
+                                        .frame(width: 32, height: 32)
+                                    Image(systemName: "trash.fill")
+                                        .foregroundColor(.white)
+                                        .font(.system(size: 12))
+                                }
+                                Text("タスクを削除")
+                                    .foregroundColor(.white)
+                                    .font(.caption)
+                                    .padding(4)
+                                    .frame(maxWidth: .infinity)
+                                    .background(Color.blue)
+                                    .cornerRadius(3)
+                            }
+                            .frame(width: 240, height: 20)
+                            .padding(EdgeInsets(top: 0, leading: 0, bottom: 16.0, trailing: 16.0))
+                        }.actionSheet(isPresented: $isTaskDeleteActionSheet){
+                            let activityCount = TaskViewModel().numberOfActivities(for: task)
+
+                            if activityCount > 0 {
+                                return ActionSheet(
+                                    title: Text("タスクの削除"),
+                                    message: Text("このタスクには\(activityCount) 件のアクティビティが関連づけられています。 関連づけられたアイテムごと削除しますか？"),
+                                    buttons: [
+                                        .destructive(Text("関連アイテムごと削除"), action: {
+                                            TaskViewModel().deleteTaskWithRelatedItems(task)
+                                            presentationMode.wrappedValue.dismiss()
+                                        }),
+                                        .destructive(Text("タスクのみ削除"), action: {
+                                            TaskViewModel().deleteTask(task)
+                                            presentationMode.wrappedValue.dismiss()
+                                        }),
+                                        .cancel()
+                                    ]
+                                )
+                            } else {
+                                return ActionSheet(
+                                    title: Text("タスクの削除"),
+                                    message: Text("このタスクを削除してよろしいですか？"),
+                                    buttons: [
+                                        .destructive(Text("削除"), action: {
+                                            TaskViewModel().deleteTask(task)
+                                            presentationMode.wrappedValue.dismiss()
+                                        }),
+                                        .cancel()
+                                    ]
+                                )
+                            }
+                        }
+
                     }
                 }
 

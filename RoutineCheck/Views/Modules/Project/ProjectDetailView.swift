@@ -253,6 +253,11 @@ struct ProjectDetailView: View {
                 activity: nil
             )
         })
+        .onAppear() {
+            taskViewModel.fetchTasks()
+            activityViewModel.fetchActivities()
+        }
+
     }
 }
 

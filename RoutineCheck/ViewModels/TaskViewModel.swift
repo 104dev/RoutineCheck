@@ -135,7 +135,10 @@ class TaskViewModel: ObservableObject {
         return tasks.first
     }
 
-    
+    func numberOfActivities(for task: Task) -> Int {
+        return task.activities?.count ?? 0
+    }
+
     func createTask (
         name: String,
         desc: String,
@@ -218,7 +221,31 @@ class TaskViewModel: ObservableObject {
         }
     }
     
+    func deleteTask(_ task: Task) {
+        viewContext.delete(task)
+        do {
+            try viewContext.save()
+            fetchTasks()
+        } catch {
+            print("Error deleting object: \(error)")
+        }
+    }
     
+    func deleteTaskWithRelatedItems(_ task: Task) {
+        if let activities = task.activities?.allObjects as? [Activity] {
+            for activity in activities {
+                viewContext.delete(activity)
+            }
+        }
+
+        viewContext.delete(task)
+        do {
+            try viewContext.save()
+            fetchTasks()
+        } catch {
+            print("Error deleting object: \(error)")
+        }
+    }
     
 }
 
