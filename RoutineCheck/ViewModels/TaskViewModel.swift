@@ -130,6 +130,27 @@ class TaskViewModel: ObservableObject {
         }
     }
 
+    func expiredTasksToAbondone() -> Int {
+        let request = NSFetchRequest<Task>(entityName: "Task")
+        
+        let expiredTaskPredicates = NSPredicate(format: "status == %@ AND expired_dt < %@", "scheduled", NSDate())
+        
+        request.predicate = expiredTaskPredicates
+        
+        do {
+            let tasksToUpdate = try viewContext.fetch(request)
+            for task in tasksToUpdate {
+                task.status = "abandoned"
+            }
+            try viewContext.save()
+            let expiredTaskCount = tasksToUpdate.count
+            return expiredTaskCount
+        } catch {
+            print("Error updating tasks: \(error.localizedDescription)")
+        }
+        return 0
+    }
+    
     
     var firstTask: Task? {
         return tasks.first
