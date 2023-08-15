@@ -7,6 +7,7 @@ struct ProjectDetailView: View {
     @State private var selectedItemType = ItemType.task
     @State  var isPresented : Bool = false
     @State var projectFloetBtnSelected = false
+    @State var isProjectEditModalPresented = false
     @State var isTaskCreateModalPresented = false
     @State var isActivityCreateModalPresented = false
     @State var isProjectDeleteActionSheet = false
@@ -111,7 +112,7 @@ struct ProjectDetailView: View {
                         HStack{
                             Spacer()
                             Button(action:{
-                                isTaskCreateModalPresented.toggle()
+                                isProjectEditModalPresented.toggle()
                             } ) {
                                 Spacer()
                                 ZStack{
@@ -119,6 +120,31 @@ struct ProjectDetailView: View {
                                         .foregroundColor(.blue)
                                         .frame(width: 32, height: 32)
                                     Image(systemName: "book")
+                                        .foregroundColor(.white)
+                                        .font(.system(size: 12))
+                                }
+                                Text("プロジェクトを編集")
+                                    .foregroundColor(.white)
+                                    .font(.caption)
+                                    .padding(4)
+                                    .frame(maxWidth: .infinity)
+                                    .background(Color.blue)
+                                    .cornerRadius(3)
+                            }
+                            .frame(width: 240, height: 20)
+                            .padding(EdgeInsets(top: 0, leading: 0, bottom: 16.0, trailing: 16.0))
+                        }
+                        HStack{
+                            Spacer()
+                            Button(action:{
+                                isTaskCreateModalPresented.toggle()
+                            } ) {
+                                Spacer()
+                                ZStack{
+                                    Circle()
+                                        .foregroundColor(.blue)
+                                        .frame(width: 32, height: 32)
+                                    Image(systemName: "plus")
                                         .foregroundColor(.white)
                                         .font(.system(size: 12))
                                 }
@@ -238,7 +264,14 @@ struct ProjectDetailView: View {
                     .padding(EdgeInsets(top: 0, leading: 0, bottom: 16.0, trailing: 16.0))
                 }
             }
-        }.sheet(isPresented: $isTaskCreateModalPresented, content: {
+        }
+        .sheet(isPresented: $isProjectEditModalPresented, content: {
+            ProjectEditView(
+                isModalPresented:$isProjectEditModalPresented,
+                project: project
+            )
+        })
+        .sheet(isPresented: $isTaskCreateModalPresented, content: {
             TaskEditView(
                 isModalPresented:$isTaskCreateModalPresented,
                 project: project
