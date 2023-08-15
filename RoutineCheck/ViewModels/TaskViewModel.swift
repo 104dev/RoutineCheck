@@ -133,7 +133,7 @@ class TaskViewModel: ObservableObject {
     func expiredTasksToAbondone() -> Int {
         let request = NSFetchRequest<Task>(entityName: "Task")
         
-        var expiredTaskPredicates = NSPredicate(format: "status == %@ AND expired_dt < %@", "scheduled", NSDate())
+        let expiredTaskPredicates = NSPredicate(format: "status == %@ AND expired_dt < %@", "scheduled", NSDate())
         
         request.predicate = expiredTaskPredicates
         
