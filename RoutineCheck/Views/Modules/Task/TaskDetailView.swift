@@ -8,6 +8,7 @@ struct TaskDetailView: View {
     @State var isTaskEditModalPresented = false
     @State var isActivityCreateModalPresented = false
     @State var isTaskDeleteActionSheet = false
+    @State var isActivityPresented : Bool = false
     @Environment(\.presentationMode) var presentationMode
     
     var dateFormatter: DateFormatter {
@@ -110,11 +111,16 @@ struct TaskDetailView: View {
                     if let activities = task.activities?.allObjects as? [Activity], !activities.isEmpty {
                         Section(header: Text("アクティビティ一覧")) {
                             ForEach(activities, id: \.self) { activity in
-                                NavigationLink(destination: ActivityDetailView(activity: activity)){
-                                    Text(activity.name ?? "")
+                                Button {
+                                    isActivityPresented.toggle()
+                                } label: {
+                                    ActivityCardView(activity: activity)
                                         .padding(.vertical, 10)
+                                        .foregroundColor(.black)
+                                }.navigationDestination(isPresented: $isActivityPresented){
+                                    ActivityDetailView(activity: activity)
                                 }
-                            }
+                            }.listRowInsets(EdgeInsets())
                         }
                     } else {
                         Section(header: Text("アクティビティ一覧")) {
@@ -123,6 +129,9 @@ struct TaskDetailView: View {
                         }
                     }
                 }
+                .frame( maxWidth: .infinity)
+                .edgesIgnoringSafeArea(.all)
+                .listStyle(GroupedListStyle())
             }
             .padding(10)
             .background(Color(.systemGray6))
