@@ -20,7 +20,19 @@ class ProjectViewModel: ObservableObject {
     }
     
     func fetchProjects() {
+        fetchProjects(withName: nil)
+    }
+    
+    func fetchProjects(withName name: String?) {
         let request = NSFetchRequest<Project>(entityName: "Project")
+        var predicates = [NSPredicate]()
+        if let name = name {
+            let namePredicate = NSPredicate(format: "name CONTAINS[c] %@", name)
+            predicates.append(namePredicate)
+        }
+        let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+        request.predicate = compoundPredicate
+
         do {
             projects = try viewContext.fetch(request)
         }catch {
