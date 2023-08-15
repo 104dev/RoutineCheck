@@ -6,6 +6,8 @@ struct ContentView: View {
     @StateObject var taskViewModel = TaskViewModel()
     @StateObject var activityViewModel = ActivityViewModel()
     @StateObject var projectViewModel = ProjectViewModel()
+    @State private var showExpiredTaskAlert = false
+    @State private var expiredTaskAlertMessage = ""
     
     init(){
         let center = UNUserNotificationCenter.current()
@@ -22,6 +24,18 @@ struct ContentView: View {
         NavigationStack {
             VStack{
                 TabBarView()
+            }
+        }
+        .alert(isPresented: $showExpiredTaskAlert) {
+            Alert(title: Text("タスクの期限切れ"),
+                  message: Text(expiredTaskAlertMessage),
+                  dismissButton: .default(Text("OK")))
+        }
+        .onAppear(){
+            var expiredTaskCount = taskViewModel.expiredTasksToAbondone()
+            if expiredTaskCount != 0 {
+                expiredTaskAlertMessage = "\(expiredTaskCount)件のタスクが期限切れとなりました。"
+                    showExpiredTaskAlert = true
             }
         }
         .environmentObject(taskViewModel)
