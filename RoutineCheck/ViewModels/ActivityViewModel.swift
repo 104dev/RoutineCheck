@@ -18,9 +18,20 @@ class ActivityViewModel: ObservableObject {
         self.activities = []
         fetchActivities()
     }
-    
+        
     func fetchActivities() {
+        fetchActivities(withName: nil)
+    }
+    
+    func fetchActivities(withName name : String?) {
         let request = NSFetchRequest<Activity>(entityName: "Activity")
+        var predicates = [NSPredicate]()
+        if let name = name {
+            let namePredicate = NSPredicate(format: "name == %@", name)
+            predicates.append(namePredicate)
+        }
+        let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+        request.predicate = compoundPredicate
         do {
             activities = try viewContext.fetch(request)
         }catch {
