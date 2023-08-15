@@ -73,6 +73,17 @@ struct LookForItemView: View {
                 Spacer()
             }
             .navigationBarTitleDisplayMode(.inline)
+            .onAppear() {
+                if searchText.isEmpty {
+                    projectViewModel.fetchProjects()
+                    taskViewModel.fetchTasks()
+                    activityViewModel.fetchActivities()
+                } else {
+                    projectViewModel.fetchProjects()
+                    taskViewModel.fetchTasks(withName: searchText)
+                    activityViewModel.fetchActivities()
+                }
+            }
             .onChange(of: searchText) { newtext in
                 if searchText.isEmpty {
                     projectViewModel.fetchProjects()
