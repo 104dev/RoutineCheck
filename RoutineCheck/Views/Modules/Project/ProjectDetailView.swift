@@ -9,6 +9,8 @@ struct ProjectDetailView: View {
     @State var projectFloetBtnSelected = false
     @State var isTaskCreateModalPresented = false
     @State var isActivityCreateModalPresented = false
+    @State var isProjectDeleteActionSheet = false
+    @Environment(\.presentationMode) var presentationMode
 
     enum ItemType: String, CaseIterable, Identifiable {
         case task = "タスク"
@@ -156,7 +158,65 @@ struct ProjectDetailView: View {
                             .frame(width: 240, height: 20)
                             .padding(EdgeInsets(top: 0, leading: 0, bottom: 16.0, trailing: 16.0))
                         }
-                        
+                        HStack{
+                            Spacer()
+                            Button(action:{
+                                isProjectDeleteActionSheet.toggle()
+                            } ) {
+                                Spacer()
+                                ZStack{
+                                    Circle()
+                                        .foregroundColor(.blue)
+                                        .frame(width: 32, height: 32)
+                                    Image(systemName: "plus")
+                                        .foregroundColor(.white)
+                                        .font(.system(size: 12))
+                                }
+                                Text("プロジェクトを削除")
+                                    .foregroundColor(.white)
+                                    .font(.caption)
+                                    .padding(4)
+                                    .frame(maxWidth: .infinity)
+                                    .background(Color.blue)
+                                    .cornerRadius(3)
+                            }
+                            .frame(width: 240, height: 20)
+                            .padding(EdgeInsets(top: 0, leading: 0, bottom: 16.0, trailing: 16.0))
+                            .actionSheet(isPresented: $isProjectDeleteActionSheet){
+                                let taskCount = ProjectViewModel().numberOfTasks(for: project)
+                                let activityCount = ProjectViewModel().numberOfActivities(for: project)
+
+                                if taskCount > 0 || activityCount > 0 {
+                                    return ActionSheet(
+                                        title: Text("プロジェクトの削除"),
+                                        message: Text("このタスクには \(taskCount) 件のタスクと \(activityCount) 件のアクティビティが関連づけられています。 関連づけられたアイテムごと削除しますか？"),
+                                        buttons: [
+                                            .destructive(Text("関連アイテムごと削除"), action: {
+                                                ProjectViewModel().deleteWithRelatedItems(project)
+                                                presentationMode.wrappedValue.dismiss()
+                                            }),
+                                            .destructive(Text("プロジェクトのみ削除"), action: {
+                                                ProjectViewModel().deleteProject(project)
+                                                presentationMode.wrappedValue.dismiss()
+                                            }),
+                                            .cancel()
+                                        ]
+                                    )
+                                } else {
+                                    return ActionSheet(
+                                        title: Text("プロジェクトの削除"),
+                                        message: Text("このプロジェクトを削除してよろしいですか？"),
+                                        buttons: [
+                                            .destructive(Text("削除"), action: {
+                                                ProjectViewModel().deleteProject(project)
+                                                presentationMode.wrappedValue.dismiss()
+                                            }),
+                                            .cancel()
+                                        ]
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
 
