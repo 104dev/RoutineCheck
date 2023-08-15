@@ -94,9 +94,9 @@ struct LookForItemView: View {
                         taskViewModel.fetchTasks()
                         activityViewModel.fetchActivities()
                     } else {
-                        projectViewModel.fetchProjects()
+                        projectViewModel.fetchProjects(withName: searchText)
                         taskViewModel.fetchTasks(withName: searchText)
-                        activityViewModel.fetchActivities()
+                        activityViewModel.fetchActivities(withName: searchText)
                     }
                 }
                 //ここからフローティングメニュー
