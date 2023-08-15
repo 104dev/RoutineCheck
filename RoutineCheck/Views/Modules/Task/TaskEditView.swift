@@ -17,7 +17,7 @@ struct TaskEditView: View {
     //一括作成に関わる情報
     @State private var bulkTaskCount: Int = 0
     @State private var showBulkIntervalSelection: Bool = false
-    @State private var bulkInterval: Int = 0
+    @State private var bulkInterval: Int = 1
     
     @EnvironmentObject var taskViewModel : TaskViewModel
 
@@ -54,9 +54,9 @@ struct TaskEditView: View {
                                 }
                                 if(showBulkIntervalSelection){
                                     Picker("一括作成の間隔", selection: $bulkInterval) {
-                                        Text("毎日").tag(0)
-                                        Text("1週間毎").tag(1)
-                                        Text("1ヶ月毎").tag(2)
+                                        Text("毎日").tag(1)
+                                        Text("1週間毎").tag(2)
+                                        Text("1ヶ月毎").tag(3)
                                     }
                                 }
                             }
@@ -67,14 +67,17 @@ struct TaskEditView: View {
                             isModalPresented.toggle()
                         })
                         .padding()
-                        Button("保存", action: {
-                            saveTask()
-                        })
-                        .padding()
-                        Button("コピーとして保存", action: {
-                            saveTask()
-                        })
-                        .padding()
+                        if let id {
+                            Button("変更して保存", action: {
+                                saveTask()
+                            })
+                            .padding()
+                        }else {
+                            Button("新しく作成して保存", action: {
+                                saveTask()
+                            })
+                            .padding()
+                        }
                     }
             }
             .background(Color(.systemGray6))
@@ -87,10 +90,11 @@ struct TaskEditView: View {
     }
     
     private func saveTask() {
-          guard let uuid = id else {
+          guard let id else {
               taskViewModel.createTask(
                   name: title,
                   desc: desc,
+                  status: status,
                   scheduled_begin_dt: startDate,
                   scheduled_end_dt: endDate,
                   expired_dt: expiredDate,
@@ -98,18 +102,19 @@ struct TaskEditView: View {
                   bulkTaskCount: bulkTaskCount,
                   bulkInterval: bulkInterval
               )
+              print(title)
               isModalPresented.toggle()
               return
           }
 
           taskViewModel.updateTask(
-              uuid: id!,
+              uuid: id,
               name: title,
               desc: desc,
+              status: status,
               scheduled_begin_dt: startDate,
               scheduled_end_dt: endDate,
-              expired_dt: expiredDate,
-              status: status
+              expired_dt: expiredDate
           )
           isModalPresented.toggle()
       }
