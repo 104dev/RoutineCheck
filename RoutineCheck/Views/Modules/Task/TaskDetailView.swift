@@ -120,7 +120,7 @@ struct TaskDetailView: View {
                         Section(header: Text("アクティビティ一覧")) {
                             ForEach(activities, id: \.self) { activity in
                                 Button {
-                                    isActivityPresented.toggle()
+                                    isActivityPresented = true
                                 } label: {
                                     ActivityCardView(activity: activity)
                                         .padding(.vertical, 10)
@@ -157,7 +157,7 @@ struct TaskDetailView: View {
                         HStack{
                             Spacer()
                             Button(action:{
-                                isTaskEditModalPresented.toggle()
+                                isTaskEditModalPresented = true
                             } ) {
                                 Spacer()
                                 ZStack{
@@ -182,7 +182,7 @@ struct TaskDetailView: View {
                         HStack{
                             Spacer()
                             Button(action:{
-                                isTaskCreateByCopyModalPresented.toggle()
+                                isTaskCreateByCopyModalPresented = true
                             } ) {
                                 Spacer()
                                 ZStack{
@@ -207,7 +207,7 @@ struct TaskDetailView: View {
                         HStack{
                             Spacer()
                             Button(action:{
-                                isActivityCreateModalPresented.toggle()
+                                isActivityCreateModalPresented = true
                             } ) {
                                 Spacer()
                                 ZStack{
@@ -232,7 +232,7 @@ struct TaskDetailView: View {
                         HStack{
                             Spacer()
                             Button(action:{
-                                isTaskDeleteActionSheet.toggle()
+                                isTaskDeleteActionSheet = true
                             } ) {
                                 Spacer()
                                 ZStack{
@@ -294,7 +294,7 @@ struct TaskDetailView: View {
                     Spacer()
                     Button(action: {
                         withAnimation(.easeInOut) {
-                            taskFloetBtnSelected.toggle()
+                            taskFloetBtnSelected = true
                         }
                     }, label: {
                         Image(systemName: taskFloetBtnSelected ? "xmark" : "pencil")
@@ -339,7 +339,7 @@ struct TaskDetailView: View {
         })
         .sheet(isPresented: $isActivityCreateModalPresented, content: {
             ActivityEditView(
-                isModalPresented:$isTaskEditModalPresented,
+                isModalPresented: $isActivityCreateModalPresented,
                 isFloatBtnSelected: $taskFloetBtnSelected,
                 project: nil,
                 task: taskDetailViewModel.task,
