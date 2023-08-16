@@ -15,19 +15,9 @@ struct CalendarView: View {
     
     var body: some View {
         VStack(spacing: 35) {
-            let days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+            let days = ["日", "月", "火", "水", "木", "金", "土"]
             
             HStack(spacing: 20) {
-                
-                VStack(alignment: .leading, spacing: 10) {
-                    Text(extraDate()[0])
-                        .font(.caption)
-                        .fontWeight(.semibold)
-                    Text(extraDate()[1])
-                        .font(.title.bold())
-                }
-                
-                Spacer()
                 
                 Button {
                     withAnimation {
@@ -37,6 +27,18 @@ struct CalendarView: View {
                     Image(systemName: "chevron.left")
                         .font(.title2 )
                 }
+                Spacer()
+                
+                HStack(alignment: .top, spacing: 10){
+                    Text(extraDate()[1])
+                        .font(.title.bold())
+                    Text(extraDate()[0])
+                        .font(.caption)
+                        .fontWeight(.semibold)
+                }
+                
+                Spacer()
+                
                 
                 Button {
                     withAnimation {
@@ -51,18 +53,17 @@ struct CalendarView: View {
             }
             .padding(.horizontal)
             
-            // Day View...
             HStack(spacing: 0) {
                 ForEach(days, id: \.self) { day in
                     Text(day)
                         .font(.callout)
                         .fontWeight(.semibold)
                         .frame(maxWidth: .infinity)
+                        .foregroundColor(day == "日" ? Color.red : (day == "土" ? Color.blue : nil))
                 }
             }
             
             //Date
-            // Lazy Grid..
             let columns = Array(repeating: GridItem(.flexible()), count: 7)
             
             LazyVGrid(columns: columns, spacing: 1) {
@@ -82,7 +83,6 @@ struct CalendarView: View {
             Spacer()
         }
         .onChange(of: currentMonth) { newValue in
-            // update month
             selectedDate = getCurrentMonth()
         }
         .padding(.top, 20)
@@ -93,7 +93,7 @@ struct CalendarView: View {
             if value.day != -1 {
                 VStack(spacing: 1){
                     Text("\(value.day)")
-                        .font(.title3.bold())
+                        .font(isSameDay(date1: value.date, date2: selectedDate) ? .title3.bold() : .title3)
                         .foregroundColor(isSameDay(date1: value.date , date2: selectedDate) ? .white : .primary)
                         .frame(width: 40)
                         .padding(.bottom, 0)
@@ -144,7 +144,6 @@ struct CalendarView: View {
         
         let calendar = Calendar.current
         
-        // Getting Current month date
         let currentMonth = getCurrentMonth()
         
         var days = currentMonth.getAllDates().compactMap { date -> DateValue in
@@ -153,7 +152,6 @@ struct CalendarView: View {
             return dateValue
         }
         
-        // adding offset days to get exact week day...
         let firstWeekday = calendar.component(.weekday, from: days.first?.date ?? Date())
         
         for _ in 0..<firstWeekday - 1 {
