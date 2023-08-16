@@ -5,6 +5,7 @@ struct TaskEditView: View {
 
     //親ビューに関係する情報
     @Binding var isModalPresented: Bool
+    @Binding var isFloatBtnSelected: Bool
     //タスクの情報に関わる情報
     @State var id: UUID?
     @State var title: String = ""
@@ -14,6 +15,7 @@ struct TaskEditView: View {
     @State var expiredDate = Calendar.current.date(byAdding: .weekOfYear, value: 1, to: Date()) ?? Date()
     @State var status : String = ""
     @State var project: Project? = nil
+    @State var task: Task?
     //一括作成に関わる情報
     @State private var bulkTaskCount: Int = 0
     @State private var showBulkIntervalSelection: Bool = false
@@ -112,8 +114,8 @@ struct TaskEditView: View {
                   bulkTaskCount: bulkTaskCount,
                   bulkInterval: bulkInterval
               )
-              print(title)
               isModalPresented.toggle()
+              isFloatBtnSelected.toggle()
               return
           }
 
@@ -126,7 +128,9 @@ struct TaskEditView: View {
               scheduled_end_dt: endDate,
               expired_dt: expiredDate
           )
-          isModalPresented.toggle()
+            isModalPresented.toggle()
+            isFloatBtnSelected.toggle()
+
       }
 
 }
