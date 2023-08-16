@@ -9,16 +9,20 @@ class ActivityViewModel: ObservableObject {
     @Published public var project: Project?
     @Published public var created_dt: Date?
     @Published public var updated_dt: Date?
-
+    
+#if DEBUG
     private let viewContext = PersistenceController.preview.container.viewContext
-
+#else
+    private let viewContext = PersistenceController.shared.container.viewContext
+#endif
+    
     @Published var activities : [Activity]
     
     init() {
         self.activities = []
         fetchActivities()
     }
-        
+    
     func fetchActivities() {
         fetchActivities(withName: nil)
     }
@@ -38,11 +42,11 @@ class ActivityViewModel: ObservableObject {
             print("DEBUG: Some error occured while fetching")
         }
     }
-
+    
     var firstActibity: Activity? {
         return activities.first
     }
-
+    
     func createActivity (name: String, desc: String){
         let newActivity = Activity(context: viewContext)
         newActivity.name = name

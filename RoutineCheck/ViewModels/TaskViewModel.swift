@@ -17,7 +17,11 @@ class TaskViewModel: ObservableObject {
     @Published public var created_dt: Date?
     @Published public var updated_dt: Date?
     
+#if DEBUG
     private let viewContext = PersistenceController.preview.container.viewContext
+#else
+    private let viewContext = PersistenceController.shared.container.viewContext
+#endif
     
     @Published var tasks : [Task]
     
@@ -61,13 +65,13 @@ class TaskViewModel: ObservableObject {
             var calendar = Calendar.current
             let jtcTimeZone = TimeZone(identifier: "Asia/Tokyo")
             calendar.timeZone = jtcTimeZone!
-
+            
             var component = calendar.dateComponents([.year, .month, .day], from: date)
             component.hour = 0
             component.minute = 0
             component.second = 0
             let start = calendar.date(from:component)
-
+            
             let nextDay = calendar.date(byAdding: .day, value: 1, to: date)
             component = calendar.dateComponents([.year, .month, .day], from: nextDay!)
             component.hour = 23
@@ -75,7 +79,7 @@ class TaskViewModel: ObservableObject {
             component.second = 59
             let end = calendar.date(from:component)
             let datePredicate = NSPredicate(format:"(scheduled_begin_dt >= %@) AND (scheduled_begin_dt <= %@)",start! as NSDate ,end! as NSDate)
-               
+            
             predicates.append(datePredicate)
         }
         
@@ -91,7 +95,7 @@ class TaskViewModel: ObservableObject {
             print("DEBUG: Some error occurred while fetching")
         }
     }
-        
+    
     func hasTaskForDate(_ date: Date) -> Bool {
         let tasks = fetchTasksForCalendar(date)
         return !tasks.isEmpty
@@ -103,13 +107,13 @@ class TaskViewModel: ObservableObject {
         var calendar = Calendar.current
         let jtcTimeZone = TimeZone(identifier: "Asia/Tokyo")
         calendar.timeZone = jtcTimeZone!
-
+        
         var component = calendar.dateComponents([.year, .month, .day], from: date)
         component.hour = 0
         component.minute = 0
         component.second = 0
         let start = calendar.date(from:component)
-
+        
         let nextDay = calendar.date(byAdding: .day, value: 1, to: date)
         component = calendar.dateComponents([.year, .month, .day], from: nextDay!)
         component.hour = 23
@@ -120,7 +124,7 @@ class TaskViewModel: ObservableObject {
         predicates.append(datePredicate)
         let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
         request.predicate = compoundPredicate
-
+        
         do {
             let tasks = try viewContext.fetch(request)
             return tasks
@@ -129,7 +133,7 @@ class TaskViewModel: ObservableObject {
             return []
         }
     }
-
+    
     func expiredTasksToAbondone() -> Int {
         let request = NSFetchRequest<Task>(entityName: "Task")
         
@@ -155,11 +159,11 @@ class TaskViewModel: ObservableObject {
     var firstTask: Task? {
         return tasks.first
     }
-
+    
     func numberOfActivities(for task: Task) -> Int {
         return task.activities?.count ?? 0
     }
-
+    
     func createTask (
         name: String,
         desc: String,
@@ -174,7 +178,7 @@ class TaskViewModel: ObservableObject {
         var intervalComponents: Calendar.Component
         
         let calendar = Calendar.current
-                
+        
         for index in 0..<bulkTaskCount + 1 {
             let newTask = Task(context: viewContext)
             newTask.name = name
@@ -184,7 +188,7 @@ class TaskViewModel: ObservableObject {
             } else {
                 newTask.status = "scheduled"
             }
-
+            
             print(bulkInterval)
             switch bulkInterval {
             case 1:
@@ -217,7 +221,7 @@ class TaskViewModel: ObservableObject {
         }
         fetchTasks()
         ProjectViewModel().fetchProjects()
-
+        
     }
     
     func updateTask (
@@ -267,7 +271,7 @@ class TaskViewModel: ObservableObject {
                 viewContext.delete(activity)
             }
         }
-
+        
         viewContext.delete(task)
         do {
             try viewContext.save()
