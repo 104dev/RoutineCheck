@@ -26,11 +26,11 @@ struct ActivityEditView: View {
                 .padding()
             HStack {
                 Button("キャンセル", action: {
-                    isModalPresented.toggle()
+                    isModalPresented = false
                 })
                 .padding()
                 Button("保存", action: {
-                    saveTask()
+                    saveActivity()
                 })
                 .padding()
             }
@@ -47,14 +47,14 @@ struct ActivityEditView: View {
             desc = activity.desc ?? ""
     }
     
-    private func saveTask() {
+    private func saveActivity() {
           guard let activity = activity else {
               activityViewModel.createActivity(
                   name: title,
                   desc: desc
               )
-              isModalPresented.toggle()
-              isFloatBtnSelected.toggle()
+              isModalPresented = false
+              isFloatBtnSelected = false
               return
           }
 
@@ -63,8 +63,8 @@ struct ActivityEditView: View {
               name: title,
               desc: desc
           )
-          isModalPresented.toggle()
-        isFloatBtnSelected.toggle()
+          isModalPresented = false
+         isFloatBtnSelected = false
       }
 }
 
