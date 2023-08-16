@@ -72,8 +72,7 @@ class TaskViewModel: ObservableObject {
             component.second = 0
             let start = calendar.date(from:component)
             
-            let nextDay = calendar.date(byAdding: .day, value: 1, to: date)
-            component = calendar.dateComponents([.year, .month, .day], from: nextDay!)
+            component = calendar.dateComponents([.year, .month, .day], from: date)
             component.hour = 23
             component.minute = 59
             component.second = 59
@@ -114,8 +113,7 @@ class TaskViewModel: ObservableObject {
         component.second = 0
         let start = calendar.date(from:component)
         
-        let nextDay = calendar.date(byAdding: .day, value: 1, to: date)
-        component = calendar.dateComponents([.year, .month, .day], from: nextDay!)
+        component = calendar.dateComponents([.year, .month, .day], from: date)
         component.hour = 23
         component.minute = 59
         component.second = 59
@@ -181,6 +179,7 @@ class TaskViewModel: ObservableObject {
         
         for index in 0..<bulkTaskCount + 1 {
             let newTask = Task(context: viewContext)
+            newTask.id = UUID()
             newTask.name = name
             newTask.desc = desc
             if index == 0 {
@@ -200,10 +199,9 @@ class TaskViewModel: ObservableObject {
             default:
                 intervalComponents = .day
             }
-            newTask.scheduled_begin_dt = calendar.date(byAdding: intervalComponents,
-                                                       value:index + 1, to: scheduled_begin_dt)!
-            newTask.scheduled_end_dt = calendar.date(byAdding: intervalComponents,value:index + 1, to: scheduled_end_dt)!
-            newTask.expired_dt = calendar.date(byAdding: intervalComponents,value:index + 1, to: expired_dt)!
+            newTask.scheduled_begin_dt = calendar.date(byAdding: intervalComponents, value: index + 1, to: scheduled_begin_dt)!
+            newTask.scheduled_end_dt = calendar.date(byAdding: intervalComponents,value: index + 1, to: scheduled_end_dt)!
+            newTask.expired_dt = calendar.date(byAdding: intervalComponents,value: index + 1, to: expired_dt)!
             newTask.created_dt = Date()
             newTask.updated_dt = Date()
             if let projectToAssociate = project {

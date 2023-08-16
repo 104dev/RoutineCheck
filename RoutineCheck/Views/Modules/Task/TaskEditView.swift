@@ -76,7 +76,7 @@ struct TaskEditView: View {
                     }
                     HStack {
                         Button("キャンセル", action: {
-                            isModalPresented.toggle()
+                            isModalPresented = false
                         })
                         .padding()
                         if let id {
@@ -114,8 +114,8 @@ struct TaskEditView: View {
                   bulkTaskCount: bulkTaskCount,
                   bulkInterval: bulkInterval
               )
-              isModalPresented.toggle()
-              isFloatBtnSelected.toggle()
+              isModalPresented = false
+              isFloatBtnSelected = false
               return
           }
 
@@ -128,8 +128,8 @@ struct TaskEditView: View {
               scheduled_end_dt: endDate,
               expired_dt: expiredDate
           )
-            isModalPresented.toggle()
-            isFloatBtnSelected.toggle()
+            isModalPresented = false
+            isFloatBtnSelected = false
 
       }
 

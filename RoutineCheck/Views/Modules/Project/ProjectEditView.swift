@@ -7,6 +7,7 @@ struct ProjectEditView: View {
     let project: Project?
     @State private var title: String = ""
     @State private var desc: String = ""
+    @EnvironmentObject var projectViewModel : ProjectViewModel
     
     var body: some View {
         VStack{
@@ -17,7 +18,7 @@ struct ProjectEditView: View {
                 .padding()
             HStack {
                 Button("キャンセル", action: {
-                    isModalPresented.toggle()
+                    isModalPresented = false
                 })
                 .padding()
                 Button("保存", action: {
@@ -33,29 +34,29 @@ struct ProjectEditView: View {
     }
     
     private func setupInitialValues() {
-            guard let project = project else { return }
-            title = project.name ?? ""
-            desc = project.desc ?? ""
+        guard let project = project else { return }
+        title = project.name
+        desc = project.desc 
     }
     
     private func saveProject() {
-          guard let project = project else {
-              ProjectViewModel().createProject(
-                  name: title,
-                  desc: desc
-              )
-              isModalPresented.toggle()
-              isFloatBtnSelected.toggle()
-              return
-          }
-
-          ProjectViewModel().updateProject(
-              uuid: project.id!,
-              name: title,
-              desc: desc
-          )
-            isModalPresented.toggle()
-            isFloatBtnSelected.toggle()
-      }
-
+        guard let project = project else {
+            projectViewModel.createProject(
+                name: title,
+                desc: desc
+            )
+            isModalPresented = false
+            isFloatBtnSelected = false
+            return
+        }
+        
+        projectViewModel.updateProject(
+            uuid: project.id,
+            name: title,
+            desc: desc
+        )
+        isModalPresented = false
+        isFloatBtnSelected = false
+    }
+    
 }

@@ -3,6 +3,12 @@ import SwiftUI
 struct ActivityCardView: View {
     var activity : Activity
     
+    var dateFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "YYYY/MM/dd HH:mm"
+        return formatter
+    }
+    
     var body: some View {
         VStack{
             HStack(spacing: 0){
@@ -33,8 +39,8 @@ struct ActivityCardView: View {
                         }
                         Spacer()
                     }
-                    if let desc = activity.desc{
-                        Text(desc)
+                    if !activity.desc.isEmpty {
+                        Text(activity.desc)
                             .padding(.top, 10)
                             .lineLimit(1)
                             .truncationMode(.tail)
@@ -44,9 +50,11 @@ struct ActivityCardView: View {
                             .lineLimit(1)
                             .truncationMode(.tail)
                     }
-                    Text("2023年7月23日 22:14")
-                        .padding(.top , 1)
-                        .foregroundColor(Color.gray)
+                    HStack {
+                        Text(dateFormatter.string(from: activity.created_dt))
+                            .padding(.top , 1)
+                            .foregroundColor(Color.gray)
+                    }
                     Spacer()
                 }
                 .padding(.horizontal,10)

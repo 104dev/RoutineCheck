@@ -38,8 +38,8 @@ struct TaskDetailView: View {
                 }.font(.callout)
                     .padding(.bottom , 5)
                     .padding(.leading, 20)
-                if let taskName = taskDetailViewModel.task.name{
-                    Text("\(taskName)").font(.system(size: 20)).fontWeight(.semibold)
+                if !taskDetailViewModel.task.name.isEmpty {
+                    Text("\(taskDetailViewModel.task.name)").font(.system(size: 20)).fontWeight(.semibold)
                         .padding(.leading, 20)
                 }else{
                     Text("無題のタスク")
@@ -47,8 +47,8 @@ struct TaskDetailView: View {
                 }
                 List{
                     Section(header: Text("説明")){
-                        if let taskDesc = taskDetailViewModel.task.desc{
-                            Text("\(taskDesc)")
+                        if !taskDetailViewModel.task.desc.isEmpty{
+                            Text("\(taskDetailViewModel.task.desc)")
                         }else{
                             Text("このタスクの説明はありません。").foregroundColor(Color.gray)
                         }
@@ -64,10 +64,8 @@ struct TaskDetailView: View {
                                 Text("実行予定")
                             case "abandoned":
                                 Text("断念")
-                            case nil:
-                                Text("ステータスなし")
-                            case .some(_):
-                                Text("その他のステータス")
+                            default:
+                                Text("未設定")
                             }
                         }
                         HStack{
@@ -100,11 +98,7 @@ struct TaskDetailView: View {
                         HStack{
                             Text("作成日時")
                             Spacer()
-                            if let createdDate = taskDetailViewModel.task.created_dt {
-                                Text(dateFormatter.string(from: createdDate))
-                            } else {
-                                Text("No data")
-                            }
+                            Text(dateFormatter.string(from: taskDetailViewModel.task.created_dt))
                         }
                         HStack{
                             Text("最終更新日")
@@ -120,7 +114,7 @@ struct TaskDetailView: View {
                         Section(header: Text("アクティビティ一覧")) {
                             ForEach(activities, id: \.self) { activity in
                                 Button {
-                                    isActivityPresented.toggle()
+                                    isActivityPresented = true
                                 } label: {
                                     ActivityCardView(activity: activity)
                                         .padding(.vertical, 10)
@@ -157,7 +151,7 @@ struct TaskDetailView: View {
                         HStack{
                             Spacer()
                             Button(action:{
-                                isTaskEditModalPresented.toggle()
+                                isTaskEditModalPresented = true
                             } ) {
                                 Spacer()
                                 ZStack{
@@ -182,7 +176,7 @@ struct TaskDetailView: View {
                         HStack{
                             Spacer()
                             Button(action:{
-                                isTaskCreateByCopyModalPresented.toggle()
+                                isTaskCreateByCopyModalPresented = true
                             } ) {
                                 Spacer()
                                 ZStack{
@@ -207,7 +201,7 @@ struct TaskDetailView: View {
                         HStack{
                             Spacer()
                             Button(action:{
-                                isActivityCreateModalPresented.toggle()
+                                isActivityCreateModalPresented = true
                             } ) {
                                 Spacer()
                                 ZStack{
@@ -232,7 +226,7 @@ struct TaskDetailView: View {
                         HStack{
                             Spacer()
                             Button(action:{
-                                isTaskDeleteActionSheet.toggle()
+                                isTaskDeleteActionSheet = true
                             } ) {
                                 Spacer()
                                 ZStack{
@@ -294,7 +288,7 @@ struct TaskDetailView: View {
                     Spacer()
                     Button(action: {
                         withAnimation(.easeInOut) {
-                            taskFloetBtnSelected.toggle()
+                            taskFloetBtnSelected = true
                         }
                     }, label: {
                         Image(systemName: taskFloetBtnSelected ? "xmark" : "pencil")
@@ -314,13 +308,13 @@ struct TaskDetailView: View {
             TaskEditView(
                 isModalPresented: $isTaskEditModalPresented,
                 isFloatBtnSelected: $taskFloetBtnSelected,
-                id: taskDetailViewModel.task.id!,
-                title: taskDetailViewModel.task.name ?? "",
-                desc: taskDetailViewModel.task.desc ?? "",
+                id: taskDetailViewModel.task.id,
+                title: taskDetailViewModel.task.name ,
+                desc: taskDetailViewModel.task.desc ,
                 startDate: taskDetailViewModel.task.scheduled_begin_dt ?? Date(),
                 endDate: taskDetailViewModel.task.scheduled_end_dt ?? Date(),
                 expiredDate: taskDetailViewModel.task.expired_dt ?? Date(),
-                status: taskDetailViewModel.task.status ?? "scheduled",
+                status: taskDetailViewModel.task.status ,
                 task: taskDetailViewModel.task
             )
         })
@@ -328,20 +322,20 @@ struct TaskDetailView: View {
             TaskEditView(
                 isModalPresented: $isTaskCreateByCopyModalPresented,
                 isFloatBtnSelected: $taskFloetBtnSelected,
-                title: taskDetailViewModel.task.name ?? "",
-                desc: taskDetailViewModel.task.desc ?? "",
+                title: taskDetailViewModel.task.name ,
+                desc: taskDetailViewModel.task.desc ,
                 startDate: taskDetailViewModel.task.scheduled_begin_dt ?? Date(),
                 endDate: taskDetailViewModel.task.scheduled_end_dt ?? Date(),
                 expiredDate: taskDetailViewModel.task.expired_dt ?? Date(),
-                status: taskDetailViewModel.task.status ?? "scheduled",
+                status: taskDetailViewModel.task.status ,
                 project: taskDetailViewModel.task.project
             )
         })
         .sheet(isPresented: $isActivityCreateModalPresented, content: {
             ActivityEditView(
-                isModalPresented:$isTaskEditModalPresented,
+                isModalPresented: $isActivityCreateModalPresented,
                 isFloatBtnSelected: $taskFloetBtnSelected,
-                project: nil,
+                project: taskDetailViewModel.task.project,
                 task: taskDetailViewModel.task,
                 activity: nil
             )

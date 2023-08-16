@@ -58,21 +58,20 @@ class Seeder {
         ]
         
         let project = Project(context: context)
-        project.id = projectData[0]["id"] as? UUID
-        project.name = projectData[0]["name"] as? String
-        project.desc = projectData[0]["desc"] as? String
-        project.status = projectData[0]["status"] as? String
-        project.created_dt = projectData[0]["created_dt"] as? Date
+        project.id = projectData[0]["id"] as? UUID ?? UUID()
+        project.name = projectData[0]["name"] as? String ?? "無題のプロジェクト"
+        project.desc = projectData[0]["desc"] as? String ?? "説明文がありません。"
+        project.created_dt = projectData[0]["created_dt"] as? Date ?? Date()
         
         for (n, taskSeeder) in tasksData.enumerated() {
             let task = Task(context: context)
             task.id = UUID()
-            task.name = taskSeeder["name"] as? String
-            task.desc = taskSeeder["desc"] as? String
-            task.status = taskSeeder["status"] as? String
+            task.name = taskSeeder["name"] as? String ?? "無題のタスク"
+            task.desc = taskSeeder["desc"] as? String ?? "説明文がありません。"
+            task.status = taskSeeder["status"] as? String ?? "scheduled"
             task.scheduled_begin_dt = taskSeeder["scheduled_begin_dt"] as? Date
             task.scheduled_end_dt = taskSeeder["scheduled_end_dt"] as? Date
-            task.created_dt = taskSeeder["created_dt"] as? Date
+            task.created_dt = taskSeeder["created_dt"] as? Date ?? Date()
             task.updated_dt = taskSeeder["created_dt"] as? Date
             task.expired_dt = taskSeeder["expired_dt"] as? Date
             task.project = project
@@ -82,9 +81,9 @@ class Seeder {
                 for activitySeeder in activitiesData{
                     let activity = Activity(context: context)
                     activity.id = UUID()
-                    activity.name = activitySeeder["name"] as? String
-                    activity.desc = activitySeeder["desc"] as? String
-                    activity.created_dt = activitySeeder["created_dt"] as? Date
+                    activity.name = activitySeeder["name"] as? String ?? "無題のアクティビティ"
+                    activity.desc = activitySeeder["desc"] as? String ?? "説明文がありません。"
+                    activity.created_dt = activitySeeder["created_dt"] as? Date ?? Date()
                     activity.updated_dt = activitySeeder["updated_dt"] as? Date
                     activity.project = project
                     activity.task = task

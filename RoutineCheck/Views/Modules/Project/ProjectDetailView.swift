@@ -32,8 +32,8 @@ struct ProjectDetailView: View {
         ZStack{
             VStack{
                 HStack{
-                    if let projectName = projectDetailViewModel.project.name {
-                        Text("\(projectName)").font(.system(size: 20)).fontWeight(.semibold)
+                    if !projectDetailViewModel.project.name.isEmpty {
+                        Text("\(projectDetailViewModel.project.name)").font(.system(size: 20)).fontWeight(.semibold)
                             .padding(.leading, 20)
                     }else{
                         Text("無題のプロジェクト")
@@ -44,8 +44,8 @@ struct ProjectDetailView: View {
                     .padding(.top , 20)
                 List{
                     Section(header: Text("説明")){
-                        if let projectDesc = projectDetailViewModel.project.desc {
-                            Text("\(projectDesc)")
+                        if !projectDetailViewModel.project.desc.isEmpty {
+                            Text("\(projectDetailViewModel.project.desc)")
                         }else{
                             Text("このプロジェクトの説明はありません。").foregroundColor(Color.gray)
                         }
@@ -70,7 +70,7 @@ struct ProjectDetailView: View {
                         if let projectTasks = projectDetailViewModel.project.tasks?.allObjects as? [Task], !projectTasks.isEmpty{
                             ForEach(projectTasks, id: \.self) { task in
                                 Button {
-                                    isPresented.toggle()
+                                    isPresented = true
                                 } label: {
                                     TaskCardView(task: task)
                                         .padding(.vertical, 10)
@@ -86,7 +86,7 @@ struct ProjectDetailView: View {
                         if let projectActivities = projectDetailViewModel.project.activities?.allObjects as? [Activity] , !projectActivities.isEmpty {
                             ForEach(projectActivities, id: \.self) { activity in
                                 Button {
-                                    isPresented.toggle()
+                                    isPresented = true
                                 } label: {
                                     ActivityCardView(activity: activity)
                                         .padding(.vertical, 10)
@@ -143,7 +143,7 @@ struct ProjectDetailView: View {
                         HStack{
                             Spacer()
                             Button(action:{
-                                isTaskCreateModalPresented.toggle()
+                                isTaskCreateModalPresented = true
                             } ) {
                                 Spacer()
                                 ZStack{
@@ -168,7 +168,7 @@ struct ProjectDetailView: View {
                         HStack{
                             Spacer()
                             Button(action:{
-                                isActivityCreateModalPresented.toggle()
+                                isActivityCreateModalPresented = true
                             } ) {
                                 Spacer()
                                 ZStack{
@@ -193,7 +193,7 @@ struct ProjectDetailView: View {
                         HStack{
                             Spacer()
                             Button(action:{
-                                isProjectDeleteActionSheet.toggle()
+                                isProjectDeleteActionSheet = true
                             } ) {
                                 Spacer()
                                 ZStack{

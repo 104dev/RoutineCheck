@@ -90,6 +90,7 @@ class ProjectViewModel: ObservableObject {
     
     func createProject (name: String, desc: String){
         let newProject = Project(context: viewContext)
+        newProject.id = UUID()
         newProject.name = name
         newProject.desc = desc
         newProject.created_dt = Date()

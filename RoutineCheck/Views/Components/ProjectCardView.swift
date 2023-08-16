@@ -13,16 +13,30 @@ struct ProjectCardView: View {
                     .foregroundColor(Color.blue)
                     .cornerRadius(20, corners: [.topLeft, .bottomLeft])
                 VStack(alignment: .leading){
-                    Text("日常タスク")
-                        .font(.system(size: 20))
-                        .fontWeight(.semibold)
-                        .padding(.bottom, 1)
-                        .lineLimit(1)
-                        .truncationMode(.tail)
-                    Text("ディスクリプションをここに記載します。")
-                        .lineLimit(1)
-                        .truncationMode(.tail)
-
+                    if !project.name.isEmpty{
+                        Text(project.name)
+                            .font(.system(size: 20))
+                            .fontWeight(.semibold)
+                            .padding(.bottom, 1)
+                            .lineLimit(1)
+                            .truncationMode(.tail)
+                    }else {
+                        Text("無題のプロジェクト")
+                            .font(.system(size: 20))
+                            .fontWeight(.semibold)
+                            .padding(.bottom, 1)
+                            .lineLimit(1)
+                            .truncationMode(.tail)
+                    }
+                    if !project.desc.isEmpty {
+                        Text(project.desc)
+                            .lineLimit(1)
+                            .truncationMode(.tail)
+                    }else{
+                        Text("説明文がありません。")
+                            .lineLimit(1)
+                            .truncationMode(.tail)
+                    }
                     Divider()
                     Text("達成率")
                         .padding(.top , 1)
