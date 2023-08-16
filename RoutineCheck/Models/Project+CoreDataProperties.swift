@@ -20,7 +20,6 @@ extension Project {
     @NSManaged public var desc: String
     @NSManaged public var id: UUID
     @NSManaged public var name: String
-    @NSManaged public var status: String
     @NSManaged public var activities: NSSet?
     @NSManaged public var tasks: NSSet?
 
