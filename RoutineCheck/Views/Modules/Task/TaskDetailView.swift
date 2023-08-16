@@ -340,6 +340,7 @@ struct TaskDetailView: View {
         .sheet(isPresented: $isActivityCreateModalPresented, content: {
             ActivityEditView(
                 isModalPresented:$isTaskEditModalPresented,
+                isFloatBtnSelected: $taskFloetBtnSelected,
                 project: nil,
                 task: taskDetailViewModel.task,
                 activity: nil

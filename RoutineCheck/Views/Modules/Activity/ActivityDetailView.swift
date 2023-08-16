@@ -173,7 +173,7 @@ struct ActivityDetailView: View {
         }
         .sheet(isPresented: $isActivityEditModalPresented, content: {
             ActivityEditView(
-                isModalPresented:$isActivityEditModalPresented, project: nil,
+                isModalPresented:$isActivityEditModalPresented, isFloatBtnSelected: $activityFloetBtnSelected, project: nil,
                 task: nil,
                 activity: activityDetailViewModel.activity
             )

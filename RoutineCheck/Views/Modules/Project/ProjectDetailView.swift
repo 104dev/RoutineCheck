@@ -286,7 +286,7 @@ struct ProjectDetailView: View {
         })
         .sheet(isPresented: $isActivityCreateModalPresented, content: {
             ActivityEditView(
-                isModalPresented:$isActivityCreateModalPresented,
+                isModalPresented:$isActivityCreateModalPresented, isFloatBtnSelected: $projectFloetBtnSelected,
                 project: projectDetailViewModel.project,
                 task: nil,
                 activity: nil
