@@ -341,7 +341,7 @@ struct TaskDetailView: View {
             ActivityEditView(
                 isModalPresented: $isActivityCreateModalPresented,
                 isFloatBtnSelected: $taskFloetBtnSelected,
-                project: nil,
+                project: taskDetailViewModel.task.project,
                 task: taskDetailViewModel.task,
                 activity: nil
             )

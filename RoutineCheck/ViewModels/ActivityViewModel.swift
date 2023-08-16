@@ -47,11 +47,19 @@ class ActivityViewModel: ObservableObject {
         return activities.first
     }
     
-    func createActivity (name: String, desc: String){
+    func createActivity (name: String, desc: String, project: Project?, task:Task?){
         let newActivity = Activity(context: viewContext)
         newActivity.name = name
         newActivity.desc = desc
         newActivity.created_dt = Date()
+        if let projectToAssociate = project {
+            newActivity.project = projectToAssociate
+            project?.addToActivities(newActivity)
+        }
+        if let taskToAssociate = task {
+            newActivity.task = taskToAssociate
+            project?.addToActivities(newActivity)
+        }
         do {
             try viewContext.save()
         } catch {

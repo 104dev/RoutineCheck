@@ -51,7 +51,9 @@ struct ActivityEditView: View {
           guard let activity = activity else {
               activityViewModel.createActivity(
                   name: title,
-                  desc: desc
+                  desc: desc,
+                  project: project,
+                  task: task
               )
               isModalPresented = false
               isFloatBtnSelected = false
