@@ -42,12 +42,21 @@ struct TaskCardView: View {
                                     .lineLimit(1)
                                     .truncationMode(.tail)
                             }
-                            Text(task.name )
-                                .font(.system(size: 20))
-                                .fontWeight(.semibold)
-                                .padding(.top, 1)
-                                .lineLimit(1)
-                                .truncationMode(.tail)
+                            if !task.name.isEmpty {
+                                Text(task.name )
+                                    .font(.system(size: 20))
+                                    .fontWeight(.semibold)
+                                    .padding(.top, 1)
+                                    .lineLimit(1)
+                                    .truncationMode(.tail)
+                            }else{
+                                Text("名前なしのタスク")
+                                    .font(.system(size: 20))
+                                    .fontWeight(.semibold)
+                                    .padding(.top, 1)
+                                    .lineLimit(1)
+                                    .truncationMode(.tail)
+                            }
                         }
                         Spacer()
                         VStack() {
