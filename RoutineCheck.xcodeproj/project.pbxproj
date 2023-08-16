@@ -41,6 +41,9 @@
 		6148DB352A8AA1DB008520CF /* TimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6148DB342A8AA1DB008520CF /* TimelineView.swift */; };
 		6148DB372A8AA272008520CF /* DateValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6148DB362A8AA272008520CF /* DateValue.swift */; };
 		6148DB3D2A8B48F4008520CF /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 6148DB3C2A8B48F4008520CF /* .gitignore */; };
+		6148DB472A8BFDC4008520CF /* ActivityDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6148DB462A8BFDC4008520CF /* ActivityDetailViewModel.swift */; };
+		6148DB492A8BFDD1008520CF /* ProjectDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6148DB482A8BFDD1008520CF /* ProjectDetailViewModel.swift */; };
+		6148DB4B2A8BFDDD008520CF /* TaskDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6148DB4A2A8BFDDD008520CF /* TaskDetailViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -79,6 +82,9 @@
 		6148DB342A8AA1DB008520CF /* TimelineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimelineView.swift; sourceTree = "<group>"; };
 		6148DB362A8AA272008520CF /* DateValue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateValue.swift; sourceTree = "<group>"; };
 		6148DB3C2A8B48F4008520CF /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		6148DB462A8BFDC4008520CF /* ActivityDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityDetailViewModel.swift; sourceTree = "<group>"; };
+		6148DB482A8BFDD1008520CF /* ProjectDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectDetailViewModel.swift; sourceTree = "<group>"; };
+		6148DB4A2A8BFDDD008520CF /* TaskDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDetailViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -179,6 +185,9 @@
 				6148DAFE2A8A9F72008520CF /* ActivityViewModel.swift */,
 				6148DB002A8A9F82008520CF /* TaskViewModel.swift */,
 				6148DB022A8A9F9B008520CF /* ProjectViewModel.swift */,
+				6148DB462A8BFDC4008520CF /* ActivityDetailViewModel.swift */,
+				6148DB482A8BFDD1008520CF /* ProjectDetailViewModel.swift */,
+				6148DB4A2A8BFDDD008520CF /* TaskDetailViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -328,6 +337,7 @@
 				6148DAF92A8A9F21008520CF /* Persistence.swift in Sources */,
 				6148DB012A8A9F82008520CF /* TaskViewModel.swift in Sources */,
 				6148DB262A8AA136008520CF /* CalendarView.swift in Sources */,
+				6148DB472A8BFDC4008520CF /* ActivityDetailViewModel.swift in Sources */,
 				6148DB0E2A8AA05E008520CF /* TabBarView.swift in Sources */,
 				6148DB182A8AA10A008520CF /* TaskEditView.swift in Sources */,
 				6148DB112A8AA0E6008520CF /* LookForItemView.swift in Sources */,
@@ -351,9 +361,11 @@
 				6148DAF22A8A9F00008520CF /* Task+CoreDataProperties.swift in Sources */,
 				6148DAEA2A8A9EDD008520CF /* Model.xcdatamodeld in Sources */,
 				6148DAFC2A8A9F49008520CF /* Seeder.swift in Sources */,
+				6148DB4B2A8BFDDD008520CF /* TaskDetailViewModel.swift in Sources */,
 				6148DB232A8AA136008520CF /* ActivityEditView.swift in Sources */,
 				6148DB302A8AA155008520CF /* StatusIconView.swift in Sources */,
 				6148DB242A8AA136008520CF /* ActivityDetailView.swift in Sources */,
+				6148DB492A8BFDD1008520CF /* ProjectDetailViewModel.swift in Sources */,
 				6148DB272A8AA136008520CF /* ProjectDetailView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
