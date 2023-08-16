@@ -72,8 +72,7 @@ class TaskViewModel: ObservableObject {
             component.second = 0
             let start = calendar.date(from:component)
             
-            let nextDay = calendar.date(byAdding: .day, value: 1, to: date)
-            component = calendar.dateComponents([.year, .month, .day], from: nextDay!)
+            component = calendar.dateComponents([.year, .month, .day], from: date)
             component.hour = 23
             component.minute = 59
             component.second = 59
