@@ -49,6 +49,7 @@ class ActivityViewModel: ObservableObject {
     
     func createActivity (name: String, desc: String, project: Project?, task:Task?){
         let newActivity = Activity(context: viewContext)
+        newActivity.id = UUID()
         newActivity.name = name
         newActivity.desc = desc
         newActivity.created_dt = Date()
