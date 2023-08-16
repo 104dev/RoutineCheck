@@ -17,7 +17,7 @@ struct ProjectEditView: View {
                 .padding()
             HStack {
                 Button("キャンセル", action: {
-                    isModalPresented.toggle()
+                    isModalPresented = false
                 })
                 .padding()
                 Button("保存", action: {
@@ -44,8 +44,8 @@ struct ProjectEditView: View {
                   name: title,
                   desc: desc
               )
-              isModalPresented.toggle()
-              isFloatBtnSelected.toggle()
+              isModalPresented = false
+              isFloatBtnSelected = false
               return
           }
 
@@ -54,8 +54,8 @@ struct ProjectEditView: View {
               name: title,
               desc: desc
           )
-            isModalPresented.toggle()
-            isFloatBtnSelected.toggle()
+            isModalPresented = false
+            isFloatBtnSelected = false
       }
 
 }

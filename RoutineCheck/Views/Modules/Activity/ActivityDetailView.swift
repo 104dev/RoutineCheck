@@ -88,7 +88,7 @@ struct ActivityDetailView: View {
                         HStack{
                             Spacer()
                             Button(action:{
-                                isActivityEditModalPresented.toggle()
+                                isActivityEditModalPresented = true
                             } ) {
                                 Spacer()
                                 ZStack{
@@ -113,7 +113,7 @@ struct ActivityDetailView: View {
                         HStack{
                             Spacer()
                             Button(action:{
-                                isActivityDeleteActionSheet.toggle()
+                                isActivityDeleteActionSheet = true
                             } ) {
                                 Spacer()
                                 ZStack{

@@ -108,7 +108,7 @@ struct LookForItemView: View {
                                 HStack{
                                     Spacer()
                                     Button(action:{
-                                        isProjectCreateModalPresented.toggle()
+                                        isProjectCreateModalPresented = true
                                     } ) {
                                         Spacer()
                                         ZStack{
@@ -136,7 +136,7 @@ struct LookForItemView: View {
                             Spacer()
                             Button(action: {
                                 withAnimation(.easeInOut) {
-                                    commonMenuFloatBtnSelected.toggle()
+                                    commonMenuFloatBtnSelected = true
                                 }
                             }, label: {
                                 Image(systemName: commonMenuFloatBtnSelected ? "xmark" : "pencil")
