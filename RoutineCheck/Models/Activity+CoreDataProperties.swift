@@ -16,10 +16,10 @@ extension Activity {
         return NSFetchRequest<Activity>(entityName: "Activity")
     }
 
-    @NSManaged public var created_dt: Date?
-    @NSManaged public var desc: String?
-    @NSManaged public var id: UUID?
-    @NSManaged public var name: String?
+    @NSManaged public var created_dt: Date
+    @NSManaged public var desc: String
+    @NSManaged public var id: UUID
+    @NSManaged public var name: String
     @NSManaged public var updated_dt: Date?
     @NSManaged public var project: Project?
     @NSManaged public var task: Task?

@@ -42,7 +42,7 @@ struct TaskCardView: View {
                                     .lineLimit(1)
                                     .truncationMode(.tail)
                             }
-                            Text(task.name ?? "タイトル未定義")
+                            Text(task.name )
                                 .font(.system(size: 20))
                                 .fontWeight(.semibold)
                                 .padding(.top, 1)
@@ -51,13 +51,11 @@ struct TaskCardView: View {
                         }
                         Spacer()
                         VStack() {
-                            if let taskStatus = task.status{
-                                StatusIconView(taskStatus: taskStatus)
-                            }
+                            StatusIconView(taskStatus: task.status)
                             Spacer()
                         }.padding(.top, 20)
                     }
-                    Text(task.desc ?? "このタスクの説明はありません。")
+                    Text(task.desc )
                         .padding(.top, 1)
                         .lineLimit(1)
                         .truncationMode(.tail)

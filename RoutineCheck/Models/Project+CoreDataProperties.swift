@@ -16,11 +16,11 @@ extension Project {
         return NSFetchRequest<Project>(entityName: "Project")
     }
 
-    @NSManaged public var created_dt: Date?
-    @NSManaged public var desc: String?
-    @NSManaged public var id: UUID?
-    @NSManaged public var name: String?
-    @NSManaged public var status: String?
+    @NSManaged public var created_dt: Date
+    @NSManaged public var desc: String
+    @NSManaged public var id: UUID
+    @NSManaged public var name: String
+    @NSManaged public var status: String
     @NSManaged public var activities: NSSet?
     @NSManaged public var tasks: NSSet?
 

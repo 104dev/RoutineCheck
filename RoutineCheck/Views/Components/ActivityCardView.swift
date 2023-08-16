@@ -39,8 +39,8 @@ struct ActivityCardView: View {
                         }
                         Spacer()
                     }
-                    if let desc = activity.desc{
-                        Text(desc)
+                    if !activity.desc.isEmpty {
+                        Text(activity.desc)
                             .padding(.top, 10)
                             .lineLimit(1)
                             .truncationMode(.tail)
@@ -50,14 +50,10 @@ struct ActivityCardView: View {
                             .lineLimit(1)
                             .truncationMode(.tail)
                     }
-                    if let createdDate = activity.created_dt {
-                        HStack {
-                            Text(dateFormatter.string(from: createdDate))
-                                .padding(.top , 1)
-                                .foregroundColor(Color.gray)
-                        }
-                    } else {
-                        Text("No Data")
+                    HStack {
+                        Text(dateFormatter.string(from: activity.created_dt))
+                            .padding(.top , 1)
+                            .foregroundColor(Color.gray)
                     }
                     Spacer()
                 }

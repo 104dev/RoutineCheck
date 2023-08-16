@@ -27,8 +27,8 @@ struct ActivityDetailView: View {
         ZStack{
             VStack{
                 HStack{
-                    if let activityName = activityDetailViewModel.activity.name {
-                        Text("\(activityName)").font(.system(size: 20)).fontWeight(.semibold)
+                    if !activity.name.isEmpty {
+                        Text("\(activity.name)").font(.system(size: 20)).fontWeight(.semibold)
                             .padding(.leading, 20)
                     }else{
                         Text("無題のアクティビティ")
@@ -39,8 +39,8 @@ struct ActivityDetailView: View {
                     .padding(.top , 20)
                 List{
                     Section(header: Text("説明")){
-                        if let activityDesc = activity.desc {
-                            Text("\(activityDesc)")
+                        if !activity.desc.isEmpty {
+                            Text("\(activity.desc)")
                         }else{
                             Text("アクティビティの説明はありません。").foregroundColor(Color.gray)
                         }
@@ -49,11 +49,7 @@ struct ActivityDetailView: View {
                         HStack{
                             Text("作成日時")
                             Spacer()
-                            if let createdDate = activity.created_dt {
-                                Text(dateFormatter.string(from: createdDate))
-                            } else {
-                                Text("No data")
-                            }
+                            Text(dateFormatter.string(from: activity.created_dt))
                         }
                         HStack{
                             Text("最終更新日")

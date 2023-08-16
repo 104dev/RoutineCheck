@@ -43,8 +43,8 @@ struct ActivityEditView: View {
     
     private func setupInitialValues() {
             guard let activity = activity else { return }
-            title = activity.name ?? ""
-            desc = activity.desc ?? ""
+        title = activity.name
+        desc = activity.desc
     }
     
     private func saveActivity() {
@@ -61,7 +61,7 @@ struct ActivityEditView: View {
           }
 
           activityViewModel.updateActivity(
-              uuid: activity.id!,
+              uuid: activity.id,
               name: title,
               desc: desc
           )

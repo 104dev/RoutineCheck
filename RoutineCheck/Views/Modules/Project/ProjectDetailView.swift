@@ -32,8 +32,8 @@ struct ProjectDetailView: View {
         ZStack{
             VStack{
                 HStack{
-                    if let projectName = projectDetailViewModel.project.name {
-                        Text("\(projectName)").font(.system(size: 20)).fontWeight(.semibold)
+                    if !projectDetailViewModel.project.name.isEmpty {
+                        Text("\(projectDetailViewModel.project.name)").font(.system(size: 20)).fontWeight(.semibold)
                             .padding(.leading, 20)
                     }else{
                         Text("無題のプロジェクト")
@@ -44,8 +44,8 @@ struct ProjectDetailView: View {
                     .padding(.top , 20)
                 List{
                     Section(header: Text("説明")){
-                        if let projectDesc = projectDetailViewModel.project.desc {
-                            Text("\(projectDesc)")
+                        if !projectDetailViewModel.project.desc.isEmpty {
+                            Text("\(projectDetailViewModel.project.desc)")
                         }else{
                             Text("このプロジェクトの説明はありません。").foregroundColor(Color.gray)
                         }

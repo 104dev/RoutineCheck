@@ -33,29 +33,29 @@ struct ProjectEditView: View {
     }
     
     private func setupInitialValues() {
-            guard let project = project else { return }
-            title = project.name ?? ""
-            desc = project.desc ?? ""
+        guard let project = project else { return }
+        title = project.name
+        desc = project.desc 
     }
     
     private func saveProject() {
-          guard let project = project else {
-              ProjectViewModel().createProject(
-                  name: title,
-                  desc: desc
-              )
-              isModalPresented = false
-              isFloatBtnSelected = false
-              return
-          }
-
-          ProjectViewModel().updateProject(
-              uuid: project.id!,
-              name: title,
-              desc: desc
-          )
+        guard let project = project else {
+            ProjectViewModel().createProject(
+                name: title,
+                desc: desc
+            )
             isModalPresented = false
             isFloatBtnSelected = false
-      }
-
+            return
+        }
+        
+        ProjectViewModel().updateProject(
+            uuid: project.id,
+            name: title,
+            desc: desc
+        )
+        isModalPresented = false
+        isFloatBtnSelected = false
+    }
+    
 }
