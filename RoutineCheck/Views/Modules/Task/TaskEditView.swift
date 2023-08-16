@@ -10,10 +10,10 @@ struct TaskEditView: View {
     @State var id: UUID?
     @State var title: String = ""
     @State var desc: String = ""
-    @State var startDate = Calendar.current.date(bySettingHour: 0, minute: 0, second: 0, of: Date()) ?? Date()
-    @State var endDate = Calendar.current.date(byAdding: .hour, value: 1, to: Date()) ?? Date()
+    @State var startDate = Calendar.current.date(bySettingHour: Calendar.current.component(.hour, from: Date()), minute: 0, second: 0, of: Date()) ?? Date()
+    @State var endDate = Calendar.current.date(bySettingHour: Calendar.current.component(.hour, from: Date()) + 1, minute: 0, second: 0, of: Date()) ?? Date()
     @State var expiredDate = Calendar.current.date(byAdding: .weekOfYear, value: 1, to: Date()) ?? Date()
-    @State var status : String = ""
+    @State var status : String = "scheduled"
     @State var project: Project? = nil
     @State var task: Task?
     //一括作成に関わる情報
