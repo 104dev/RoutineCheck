@@ -7,6 +7,7 @@ struct ProjectEditView: View {
     let project: Project?
     @State private var title: String = ""
     @State private var desc: String = ""
+    @EnvironmentObject var projectViewModel : ProjectViewModel
     
     var body: some View {
         VStack{
@@ -40,7 +41,7 @@ struct ProjectEditView: View {
     
     private func saveProject() {
         guard let project = project else {
-            ProjectViewModel().createProject(
+            projectViewModel.createProject(
                 name: title,
                 desc: desc
             )
@@ -49,7 +50,7 @@ struct ProjectEditView: View {
             return
         }
         
-        ProjectViewModel().updateProject(
+        projectViewModel.updateProject(
             uuid: project.id,
             name: title,
             desc: desc
