@@ -119,7 +119,7 @@ struct LookForItemView: View {
                                                 .foregroundColor(.white)
                                                 .font(.system(size: 12))
                                         }
-                                        Text("プロジェクトを削除")
+                                        Text("プロジェクトを作成")
                                             .foregroundColor(.white)
                                             .font(.caption)
                                             .padding(4)
