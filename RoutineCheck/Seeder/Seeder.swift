@@ -61,7 +61,6 @@ class Seeder {
         project.id = projectData[0]["id"] as? UUID ?? UUID()
         project.name = projectData[0]["name"] as? String ?? "無題のプロジェクト"
         project.desc = projectData[0]["desc"] as? String ?? "説明文がありません。"
-        project.status = projectData[0]["status"] as? String ?? "scheduled"
         project.created_dt = projectData[0]["created_dt"] as? Date ?? Date()
         
         for (n, taskSeeder) in tasksData.enumerated() {
