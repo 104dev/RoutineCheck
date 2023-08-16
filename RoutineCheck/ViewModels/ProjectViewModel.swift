@@ -9,9 +9,14 @@ class ProjectViewModel: ObservableObject {
     @Published public var tasks: [Task]?
     @Published public var activities: [Task]?
     @Published public var created_dt: Date?
-
+    
+#if DEBUG
     private let viewContext = PersistenceController.preview.container.viewContext
-
+#else
+    private let viewContext = PersistenceController.shared.container.viewContext
+#endif
+    
+    
     @Published var projects : [Project]
     
     init() {
@@ -32,14 +37,14 @@ class ProjectViewModel: ObservableObject {
         }
         let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
         request.predicate = compoundPredicate
-
+        
         do {
             projects = try viewContext.fetch(request)
         }catch {
             print("DEBUG: Some error occured while fetching")
         }
     }
-
+    
     var firstProject: Project? {
         return projects.first
     }
@@ -54,18 +59,18 @@ class ProjectViewModel: ObservableObject {
         if let tasks = project.tasks?.allObjects, !tasks.isEmpty {
             return true
         }
-
+        
         if let activities = project.activities?.allObjects, !activities.isEmpty {
             return true
         }
-
+        
         return false
     }
     
     func numberOfTasks(for project: Project) -> Int {
         return project.tasks?.count ?? 0
     }
-
+    
     func numberOfActivities(for project: Project) -> Int {
         return project.activities?.count ?? 0
     }
@@ -73,7 +78,7 @@ class ProjectViewModel: ObservableObject {
     func storeProject (){
         let newTask = Project(context: viewContext)
         newTask.created_dt = Date()
-
+        
         do {
             try viewContext.save()
             /*fetchProjects()*/
@@ -130,13 +135,13 @@ class ProjectViewModel: ObservableObject {
                 viewContext.delete(task)
             }
         }
-
+        
         if let activities = project.activities?.allObjects as? [Activity] {
             for activity in activities {
                 viewContext.delete(activity)
             }
         }
-
+        
         viewContext.delete(project)
         do {
             try viewContext.save()
