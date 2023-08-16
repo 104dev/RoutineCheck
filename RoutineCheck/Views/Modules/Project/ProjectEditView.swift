@@ -3,6 +3,7 @@ import SwiftUI
 struct ProjectEditView: View {
     
     @Binding var isModalPresented: Bool
+    @Binding var isFloatBtnSelected: Bool
     let project: Project?
     @State private var title: String = ""
     @State private var desc: String = ""
@@ -44,6 +45,7 @@ struct ProjectEditView: View {
                   desc: desc
               )
               isModalPresented.toggle()
+              isFloatBtnSelected.toggle()
               return
           }
 
@@ -52,7 +54,8 @@ struct ProjectEditView: View {
               name: title,
               desc: desc
           )
-          isModalPresented.toggle()
+            isModalPresented.toggle()
+            isFloatBtnSelected.toggle()
       }
 
 }
