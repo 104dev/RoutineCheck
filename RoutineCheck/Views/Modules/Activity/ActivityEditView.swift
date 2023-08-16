@@ -4,6 +4,7 @@ import SwiftUI
 struct ActivityEditView: View {
     
     @Binding var isModalPresented: Bool
+    @Binding var isFloatBtnSelected: Bool
     let project: Project?
     let task: Task?
     let activity: Activity?
@@ -53,6 +54,7 @@ struct ActivityEditView: View {
                   desc: desc
               )
               isModalPresented.toggle()
+              isFloatBtnSelected.toggle()
               return
           }
 
@@ -62,6 +64,7 @@ struct ActivityEditView: View {
               desc: desc
           )
           isModalPresented.toggle()
+        isFloatBtnSelected.toggle()
       }
 }
 

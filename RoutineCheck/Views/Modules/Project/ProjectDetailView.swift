@@ -12,6 +12,12 @@ struct ProjectDetailView: View {
     @State var isActivityCreateModalPresented = false
     @State var isProjectDeleteActionSheet = false
     @Environment(\.presentationMode) var presentationMode
+    @StateObject private var projectDetailViewModel: ProjectDetailViewModel
+    
+    init(project: Project) {
+        self.project = project
+        _projectDetailViewModel = StateObject(wrappedValue: ProjectDetailViewModel(project: project))
+    }
 
     enum ItemType: String, CaseIterable, Identifiable {
         case task = "タスク"
@@ -26,7 +32,7 @@ struct ProjectDetailView: View {
         ZStack{
             VStack{
                 HStack{
-                    if let projectName = project.name {
+                    if let projectName = projectDetailViewModel.project.name {
                         Text("\(projectName)").font(.system(size: 20)).fontWeight(.semibold)
                             .padding(.leading, 20)
                     }else{
@@ -38,7 +44,7 @@ struct ProjectDetailView: View {
                     .padding(.top , 20)
                 List{
                     Section(header: Text("説明")){
-                        if let projectDesc = project.desc {
+                        if let projectDesc = projectDetailViewModel.project.desc {
                             Text("\(projectDesc)")
                         }else{
                             Text("このプロジェクトの説明はありません。").foregroundColor(Color.gray)
@@ -61,7 +67,7 @@ struct ProjectDetailView: View {
                         }
                     
                     if(selectedItemType == .task){
-                        if let projectTasks = project.tasks?.allObjects as? [Task], !projectTasks.isEmpty{
+                        if let projectTasks = projectDetailViewModel.project.tasks?.allObjects as? [Task], !projectTasks.isEmpty{
                             ForEach(projectTasks, id: \.self) { task in
                                 Button {
                                     isPresented.toggle()
@@ -77,7 +83,7 @@ struct ProjectDetailView: View {
                             Text("関連づけられたタスクがありません")
                         }
                     }else if(selectedItemType == .activity){
-                        if let projectActivities = project.activities?.allObjects as? [Activity] , !projectActivities.isEmpty {
+                        if let projectActivities = projectDetailViewModel.project.activities?.allObjects as? [Activity] , !projectActivities.isEmpty {
                             ForEach(projectActivities, id: \.self) { activity in
                                 Button {
                                     isPresented.toggle()
@@ -267,20 +273,21 @@ struct ProjectDetailView: View {
         }
         .sheet(isPresented: $isProjectEditModalPresented, content: {
             ProjectEditView(
-                isModalPresented:$isProjectEditModalPresented,
-                project: project
+                isModalPresented:$isProjectEditModalPresented, isFloatBtnSelected: $projectFloetBtnSelected,
+                project: projectDetailViewModel.project
             )
         })
         .sheet(isPresented: $isTaskCreateModalPresented, content: {
             TaskEditView(
-                isModalPresented:$isTaskCreateModalPresented,
-                project: project
+                isModalPresented: $isTaskCreateModalPresented,
+                isFloatBtnSelected: $projectFloetBtnSelected,
+                project: projectDetailViewModel.project
             )
         })
         .sheet(isPresented: $isActivityCreateModalPresented, content: {
             ActivityEditView(
-                isModalPresented:$isActivityCreateModalPresented,
-                project: project,
+                isModalPresented:$isActivityCreateModalPresented, isFloatBtnSelected: $projectFloetBtnSelected,
+                project: projectDetailViewModel.project,
                 task: nil,
                 activity: nil
             )

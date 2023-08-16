@@ -154,7 +154,9 @@ struct LookForItemView: View {
             }
             .sheet(isPresented: $isProjectCreateModalPresented, content: {
                 ProjectEditView(
-                    isModalPresented: $isProjectCreateModalPresented, project: nil
+                    isModalPresented: $isProjectCreateModalPresented, isFloatBtnSelected: $commonMenuFloatBtnSelected,
+            project: nil
+                    
                 )
             })
         }

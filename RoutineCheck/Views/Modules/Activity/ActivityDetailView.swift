@@ -9,6 +9,13 @@ struct ActivityDetailView: View {
     @State private var isActivityEditModalPresented = false
     @State var isActivityDeleteActionSheet = false
     @Environment(\.presentationMode) var presentationMode
+    @StateObject private var activityDetailViewModel: ActivityDetailViewModel
+    
+    init(activity: Activity) {
+        self.activity = activity
+        _activityDetailViewModel = StateObject(wrappedValue: ActivityDetailViewModel(activity: activity))
+    }
+
     
     var dateFormatter: DateFormatter {
         let formatter = DateFormatter()
@@ -20,7 +27,7 @@ struct ActivityDetailView: View {
         ZStack{
             VStack{
                 HStack{
-                    if let activityName = activity.name {
+                    if let activityName = activityDetailViewModel.activity.name {
                         Text("\(activityName)").font(.system(size: 20)).fontWeight(.semibold)
                             .padding(.leading, 20)
                     }else{
@@ -78,6 +85,31 @@ struct ActivityDetailView: View {
                 Spacer()
                 if(activityFloetBtnSelected){
                     VStack{
+                        HStack{
+                            Spacer()
+                            Button(action:{
+                                isActivityEditModalPresented.toggle()
+                            } ) {
+                                Spacer()
+                                ZStack{
+                                    Circle()
+                                        .foregroundColor(.blue)
+                                        .frame(width: 32, height: 32)
+                                    Image(systemName: "book")
+                                        .foregroundColor(.white)
+                                        .font(.system(size: 12))
+                                }
+                                Text("アクティビティを編集")
+                                    .foregroundColor(.white)
+                                    .font(.caption)
+                                    .padding(4)
+                                    .frame(maxWidth: .infinity)
+                                    .background(Color.blue)
+                                    .cornerRadius(3)
+                            }
+                            .frame(width: 240, height: 20)
+                            .padding(EdgeInsets(top: 0, leading: 0, bottom: 16.0, trailing: 16.0))
+                        }
                         HStack{
                             Spacer()
                             Button(action:{
@@ -139,7 +171,13 @@ struct ActivityDetailView: View {
             }
             
         }
-        
+        .sheet(isPresented: $isActivityEditModalPresented, content: {
+            ActivityEditView(
+                isModalPresented:$isActivityEditModalPresented, isFloatBtnSelected: $activityFloetBtnSelected, project: nil,
+                task: nil,
+                activity: activityDetailViewModel.activity
+            )
+        })
     }
 }
 

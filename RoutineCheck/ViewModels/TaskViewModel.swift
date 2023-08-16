@@ -241,7 +241,6 @@ class TaskViewModel: ObservableObject {
                 targetTask.expired_dt = expired_dt
                 targetTask.status = status
                 targetTask.updated_dt = Date()
-                print(targetTask)
             }
             try viewContext.save()
             fetchTasks()

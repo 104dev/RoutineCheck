@@ -11,6 +11,13 @@ struct TaskDetailView: View {
     @State var isTaskDeleteActionSheet = false
     @State var isActivityPresented : Bool = false
     @Environment(\.presentationMode) var presentationMode
+    @StateObject private var taskDetailViewModel: TaskDetailViewModel
+    
+    
+    init(task: Task) {
+        self.task = task
+        _taskDetailViewModel = StateObject(wrappedValue: TaskDetailViewModel(task: task))
+    }
     
     var dateFormatter: DateFormatter {
         let formatter = DateFormatter()
@@ -22,7 +29,7 @@ struct TaskDetailView: View {
         ZStack{
             VStack(alignment: .leading){
                 HStack{
-                    if let belongsToProjectName = task.project?.name as? String {
+                    if let belongsToProjectName = taskDetailViewModel.task.project?.name as? String {
                         Text("\(belongsToProjectName)").multilineTextAlignment(.leading)
                     } else {
                         Text("Unknown")
@@ -31,7 +38,7 @@ struct TaskDetailView: View {
                 }.font(.callout)
                     .padding(.bottom , 5)
                     .padding(.leading, 20)
-                if let taskName = task.name{
+                if let taskName = taskDetailViewModel.task.name{
                     Text("\(taskName)").font(.system(size: 20)).fontWeight(.semibold)
                         .padding(.leading, 20)
                 }else{
@@ -40,7 +47,7 @@ struct TaskDetailView: View {
                 }
                 List{
                     Section(header: Text("説明")){
-                        if let taskDesc = task.desc{
+                        if let taskDesc = taskDetailViewModel.task.desc{
                             Text("\(taskDesc)")
                         }else{
                             Text("このタスクの説明はありません。").foregroundColor(Color.gray)
@@ -50,7 +57,7 @@ struct TaskDetailView: View {
                         HStack{
                             Text("ステータス")
                             Spacer()
-                            switch task.status {
+                            switch taskDetailViewModel.task.status {
                             case "completed":
                                 Text("完了")
                             case "scheduled":
@@ -66,7 +73,7 @@ struct TaskDetailView: View {
                         HStack{
                             Text("開始予定")
                             Spacer()
-                            if let scheduledBeginDate = task.scheduled_begin_dt {
+                            if let scheduledBeginDate = taskDetailViewModel.task.scheduled_begin_dt {
                                 Text(dateFormatter.string(from: scheduledBeginDate))
                             } else {
                                 Text("No schedule")
@@ -75,7 +82,7 @@ struct TaskDetailView: View {
                         HStack{
                             Text("終了予定")
                             Spacer()
-                            if let scheduledEndDate = task.scheduled_end_dt {
+                            if let scheduledEndDate = taskDetailViewModel.task.scheduled_end_dt {
                                 Text(dateFormatter.string(from: scheduledEndDate))
                             } else {
                                 Text("No schedule")
@@ -84,7 +91,7 @@ struct TaskDetailView: View {
                         HStack{
                             Text("期日")
                             Spacer()
-                            if let expiredDate = task.expired_dt {
+                            if let expiredDate = taskDetailViewModel.task.expired_dt {
                                 Text(dateFormatter.string(from: expiredDate))
                             } else {
                                 Text("No expire")
@@ -93,7 +100,7 @@ struct TaskDetailView: View {
                         HStack{
                             Text("作成日時")
                             Spacer()
-                            if let createdDate = task.created_dt {
+                            if let createdDate = taskDetailViewModel.task.created_dt {
                                 Text(dateFormatter.string(from: createdDate))
                             } else {
                                 Text("No data")
@@ -102,14 +109,14 @@ struct TaskDetailView: View {
                         HStack{
                             Text("最終更新日")
                             Spacer()
-                            if let updatedDate = task.updated_dt {
+                            if let updatedDate = taskDetailViewModel.task.updated_dt {
                                 Text(dateFormatter.string(from: updatedDate))
                             } else {
                                 Text("No data")
                             }
                         }
                     }
-                    if let activities = task.activities?.allObjects as? [Activity], !activities.isEmpty {
+                    if let activities = taskDetailViewModel.task.activities?.allObjects as? [Activity], !activities.isEmpty {
                         Section(header: Text("アクティビティ一覧")) {
                             ForEach(activities, id: \.self) { activity in
                                 Button {
@@ -247,7 +254,7 @@ struct TaskDetailView: View {
                             .frame(width: 240, height: 20)
                             .padding(EdgeInsets(top: 0, leading: 0, bottom: 16.0, trailing: 16.0))
                         }.actionSheet(isPresented: $isTaskDeleteActionSheet){
-                            let activityCount = TaskViewModel().numberOfActivities(for: task)
+                            let activityCount = TaskViewModel().numberOfActivities(for: taskDetailViewModel.task)
 
                             if activityCount > 0 {
                                 return ActionSheet(
@@ -255,11 +262,11 @@ struct TaskDetailView: View {
                                     message: Text("このタスクには\(activityCount) 件のアクティビティが関連づけられています。 関連づけられたアイテムごと削除しますか？"),
                                     buttons: [
                                         .destructive(Text("関連アイテムごと削除"), action: {
-                                            TaskViewModel().deleteTaskWithRelatedItems(task)
+                                            TaskViewModel().deleteTaskWithRelatedItems(taskDetailViewModel.task)
                                             presentationMode.wrappedValue.dismiss()
                                         }),
                                         .destructive(Text("タスクのみ削除"), action: {
-                                            TaskViewModel().deleteTask(task)
+                                            TaskViewModel().deleteTask(taskDetailViewModel.task)
                                             presentationMode.wrappedValue.dismiss()
                                         }),
                                         .cancel()
@@ -271,7 +278,7 @@ struct TaskDetailView: View {
                                     message: Text("このタスクを削除してよろしいですか？"),
                                     buttons: [
                                         .destructive(Text("削除"), action: {
-                                            TaskViewModel().deleteTask(task)
+                                            TaskViewModel().deleteTask(taskDetailViewModel.task)
                                             presentationMode.wrappedValue.dismiss()
                                         }),
                                         .cancel()
@@ -306,32 +313,36 @@ struct TaskDetailView: View {
         .sheet(isPresented: $isTaskEditModalPresented, content: {
             TaskEditView(
                 isModalPresented: $isTaskEditModalPresented,
-                id: task.id!,
-                title: task.name ?? "",
-                desc: task.desc ?? "",
-                startDate: task.scheduled_begin_dt ?? Date(),
-                endDate: task.scheduled_end_dt ?? Date(),
-                expiredDate: task.expired_dt ?? Date(),
-                status: task.status ?? "scheduled"
+                isFloatBtnSelected: $taskFloetBtnSelected,
+                id: taskDetailViewModel.task.id!,
+                title: taskDetailViewModel.task.name ?? "",
+                desc: taskDetailViewModel.task.desc ?? "",
+                startDate: taskDetailViewModel.task.scheduled_begin_dt ?? Date(),
+                endDate: taskDetailViewModel.task.scheduled_end_dt ?? Date(),
+                expiredDate: taskDetailViewModel.task.expired_dt ?? Date(),
+                status: taskDetailViewModel.task.status ?? "scheduled",
+                task: taskDetailViewModel.task
             )
         })
         .sheet(isPresented: $isTaskCreateByCopyModalPresented, content: {
             TaskEditView(
                 isModalPresented: $isTaskCreateByCopyModalPresented,
-                title: task.name ?? "",
-                desc: task.desc ?? "",
-                startDate: task.scheduled_begin_dt ?? Date(),
-                endDate: task.scheduled_end_dt ?? Date(),
-                expiredDate: task.expired_dt ?? Date(),
-                status: task.status ?? "scheduled",
-                project: task.project
+                isFloatBtnSelected: $taskFloetBtnSelected,
+                title: taskDetailViewModel.task.name ?? "",
+                desc: taskDetailViewModel.task.desc ?? "",
+                startDate: taskDetailViewModel.task.scheduled_begin_dt ?? Date(),
+                endDate: taskDetailViewModel.task.scheduled_end_dt ?? Date(),
+                expiredDate: taskDetailViewModel.task.expired_dt ?? Date(),
+                status: taskDetailViewModel.task.status ?? "scheduled",
+                project: taskDetailViewModel.task.project
             )
         })
         .sheet(isPresented: $isActivityCreateModalPresented, content: {
             ActivityEditView(
                 isModalPresented:$isTaskEditModalPresented,
+                isFloatBtnSelected: $taskFloetBtnSelected,
                 project: nil,
-                task: task,
+                task: taskDetailViewModel.task,
                 activity: nil
             )
         })
