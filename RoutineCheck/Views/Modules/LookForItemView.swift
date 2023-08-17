@@ -136,7 +136,7 @@ struct LookForItemView: View {
                             Spacer()
                             Button(action: {
                                 withAnimation(.easeInOut) {
-                                    commonMenuFloatBtnSelected = true
+                                    commonMenuFloatBtnSelected.toggle()
                                 }
                             }, label: {
                                 Image(systemName: commonMenuFloatBtnSelected ? "xmark" : "pencil")
