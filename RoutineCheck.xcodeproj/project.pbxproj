@@ -37,7 +37,6 @@
 		6148DB302A8AA155008520CF /* StatusIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6148DB2B2A8AA155008520CF /* StatusIconView.swift */; };
 		6148DB312A8AA155008520CF /* TaskCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6148DB2C2A8AA155008520CF /* TaskCardView.swift */; };
 		6148DB322A8AA155008520CF /* ActivityCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6148DB2D2A8AA155008520CF /* ActivityCardView.swift */; };
-		6148DB332A8AA155008520CF /* FloatingButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6148DB2E2A8AA155008520CF /* FloatingButtonView.swift */; };
 		6148DB352A8AA1DB008520CF /* TimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6148DB342A8AA1DB008520CF /* TimelineView.swift */; };
 		6148DB372A8AA272008520CF /* DateValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6148DB362A8AA272008520CF /* DateValue.swift */; };
 		6148DB3D2A8B48F4008520CF /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 6148DB3C2A8B48F4008520CF /* .gitignore */; };
@@ -78,7 +77,6 @@
 		6148DB2B2A8AA155008520CF /* StatusIconView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatusIconView.swift; sourceTree = "<group>"; };
 		6148DB2C2A8AA155008520CF /* TaskCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskCardView.swift; sourceTree = "<group>"; };
 		6148DB2D2A8AA155008520CF /* ActivityCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityCardView.swift; sourceTree = "<group>"; };
-		6148DB2E2A8AA155008520CF /* FloatingButtonView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloatingButtonView.swift; sourceTree = "<group>"; };
 		6148DB342A8AA1DB008520CF /* TimelineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimelineView.swift; sourceTree = "<group>"; };
 		6148DB362A8AA272008520CF /* DateValue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateValue.swift; sourceTree = "<group>"; };
 		6148DB3C2A8B48F4008520CF /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
@@ -257,7 +255,6 @@
 				6148DB2B2A8AA155008520CF /* StatusIconView.swift */,
 				6148DB2C2A8AA155008520CF /* TaskCardView.swift */,
 				6148DB2D2A8AA155008520CF /* ActivityCardView.swift */,
-				6148DB2E2A8AA155008520CF /* FloatingButtonView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -353,7 +350,6 @@
 				6148DAFF2A8A9F72008520CF /* ActivityViewModel.swift in Sources */,
 				6148DAF42A8A9F00008520CF /* Project+CoreDataProperties.swift in Sources */,
 				6148DB282A8AA136008520CF /* ProjectEditView.swift in Sources */,
-				6148DB332A8AA155008520CF /* FloatingButtonView.swift in Sources */,
 				6148DAD92A8A9E6B008520CF /* ContentView.swift in Sources */,
 				6148DAF52A8A9F00008520CF /* Activity+CoreDataClass.swift in Sources */,
 				6148DAF32A8A9F00008520CF /* Project+CoreDataClass.swift in Sources */,
