@@ -13,7 +13,6 @@ struct TaskDetailView: View {
     @Environment(\.presentationMode) var presentationMode
     @StateObject private var taskDetailViewModel: TaskDetailViewModel
     
-    
     init(task: Task) {
         self.task = task
         _taskDetailViewModel = StateObject(wrappedValue: TaskDetailViewModel(task: task))
@@ -98,7 +97,9 @@ struct TaskDetailView: View {
                         HStack{
                             Text("作成日時")
                             Spacer()
-                            Text(dateFormatter.string(from: taskDetailViewModel.task.created_dt))
+                            if !taskDetailViewModel.task.isFault {
+                                Text(dateFormatter.string(from: taskDetailViewModel.task.created_dt))
+                            }
                         }
                         HStack{
                             Text("最終更新日")
