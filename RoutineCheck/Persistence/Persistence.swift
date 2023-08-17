@@ -3,12 +3,14 @@ import CoreData
 struct PersistenceController {
     static let shared = PersistenceController()
 
+    #if DEBUG
     static var preview: PersistenceController = {
         let result = PersistenceController(inMemory: true)
         let viewContext = result.container.viewContext
         Seeder.seed(in: viewContext)
         return result
     }()
+    #endif
 
     let container: NSPersistentCloudKitContainer
 
