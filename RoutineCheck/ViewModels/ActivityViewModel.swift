@@ -39,7 +39,7 @@ class ActivityViewModel: ObservableObject {
         do {
             activities = try viewContext.fetch(request)
         }catch {
-            print("DEBUG: Some error occured while fetching")
+            print("Some error occured while fetching")
         }
     }
     
@@ -92,7 +92,8 @@ class ActivityViewModel: ObservableObject {
             try viewContext.save()
             fetchActivities()
         } catch {
-            print("Error deleting object: \(error)")
+            let nsError = error as NSError
+            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }
     }
 }
