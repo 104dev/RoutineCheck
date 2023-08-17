@@ -49,7 +49,9 @@ struct ActivityDetailView: View {
                         HStack{
                             Text("作成日時")
                             Spacer()
-                            Text(dateFormatter.string(from: activity.created_dt))
+                            if !activity.isFault {
+                                Text(dateFormatter.string(from: activity.created_dt))
+                            }
                         }
                         HStack{
                             Text("最終更新日")
