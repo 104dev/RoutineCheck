@@ -91,7 +91,7 @@ class TaskViewModel: ObservableObject {
         do {
             tasks = try viewContext.fetch(request)
         } catch {
-            print("DEBUG: Some error occurred while fetching")
+            print("Some error occurred while fetching")
         }
     }
     

@@ -41,7 +41,7 @@ class ProjectViewModel: ObservableObject {
         do {
             projects = try viewContext.fetch(request)
         }catch {
-            print("DEBUG: Some error occured while fetching")
+            print("Some error occured while fetching")
         }
     }
     

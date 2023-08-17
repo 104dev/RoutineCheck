@@ -39,7 +39,7 @@ class ActivityViewModel: ObservableObject {
         do {
             activities = try viewContext.fetch(request)
         }catch {
-            print("DEBUG: Some error occured while fetching")
+            print("Some error occured while fetching")
         }
     }
     
