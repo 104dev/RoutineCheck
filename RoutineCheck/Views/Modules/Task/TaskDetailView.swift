@@ -288,7 +288,7 @@ struct TaskDetailView: View {
                     Spacer()
                     Button(action: {
                         withAnimation(.easeInOut) {
-                            taskFloetBtnSelected = true
+                            taskFloetBtnSelected.toggle()
                         }
                     }, label: {
                         Image(systemName: taskFloetBtnSelected ? "xmark" : "pencil")
