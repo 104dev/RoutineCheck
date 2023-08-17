@@ -92,7 +92,8 @@ class ActivityViewModel: ObservableObject {
             try viewContext.save()
             fetchActivities()
         } catch {
-            print("Error deleting object: \(error)")
+            let nsError = error as NSError
+            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }
     }
 }

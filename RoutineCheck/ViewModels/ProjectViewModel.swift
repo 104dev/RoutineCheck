@@ -126,7 +126,8 @@ class ProjectViewModel: ObservableObject {
             try viewContext.save()
             fetchProjects()
         } catch {
-            print("Error deleting object: \(error)")
+            let nsError = error as NSError
+            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }
     }
     
@@ -148,7 +149,8 @@ class ProjectViewModel: ObservableObject {
             try viewContext.save()
             fetchProjects()
         } catch {
-            print("Error deleting object: \(error)")
+            let nsError = error as NSError
+            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }
     }
     

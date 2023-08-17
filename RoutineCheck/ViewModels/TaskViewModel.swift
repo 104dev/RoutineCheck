@@ -148,7 +148,8 @@ class TaskViewModel: ObservableObject {
             let expiredTaskCount = tasksToUpdate.count
             return expiredTaskCount
         } catch {
-            print("Error updating tasks: \(error.localizedDescription)")
+            let nsError = error as NSError
+            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }
         return 0
     }
@@ -259,7 +260,8 @@ class TaskViewModel: ObservableObject {
             try viewContext.save()
             fetchTasks()
         } catch {
-            print("Error deleting object: \(error)")
+            let nsError = error as NSError
+            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }
     }
     
@@ -275,7 +277,8 @@ class TaskViewModel: ObservableObject {
             try viewContext.save()
             fetchTasks()
         } catch {
-            print("Error deleting object: \(error)")
+            let nsError = error as NSError
+            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }
     }
     
