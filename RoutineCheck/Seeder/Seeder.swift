@@ -7,9 +7,8 @@ class Seeder {
         let projectData : [[String: Any]] = [
             [
             "id" : UUID(),
-            "name" : "ボディメイキング",
-            "desc" : "ボディメイキングを行う",
-            "status" : "progressing",
+            "name" : "ボディメイク",
+            "desc" : "・筋トレを継続してカラダを大きくする。\n・引き締まったボディを目指す。",
             "created_dt" : Date()
             ]
         ]
@@ -17,8 +16,8 @@ class Seeder {
         let tasksData: [[String: Any]] = [
             [
                 "id" : UUID(),
-                "name": "トレーニング",
-                "desc": "ベンチプレスを行う",
+                "name": "ベンチプレス",
+                "desc": "60kg*10回*3セット",
                 "status": "scheduled",
                 "scheduled_begin_dt" : Calendar.current.date(from: DateComponents(year: 2023, month: 7, day: 27, hour: 12, minute: 30)),
                 "scheduled_end_dt" : Calendar.current.date(from: DateComponents(year: 2023, month: 7, day: 27, hour: 13, minute: 30)),
@@ -27,8 +26,8 @@ class Seeder {
             ],
             [
                 "id" : UUID(),
-                "name": "トレーニング",
-                "desc": "ベンチプレスを行う",
+                "name": "ベンチプレス",
+                "desc": "60kg*10回*3セット",
                 "status": "completed",
                 "scheduled_begin_dt" : Calendar.current.date(from: DateComponents(year: 2023, month: 7, day: 28, hour: 12, minute: 30)),
                 "scheduled_end_dt" : Calendar.current.date(from: DateComponents(year: 2023, month: 7, day: 28, hour: 13, minute: 30)),
@@ -37,8 +36,8 @@ class Seeder {
             ],
             [
                 "id" : UUID(),
-                "name": "トレーニング",
-                "desc": "ベンチプレスを行う",
+                "name": "ベンチプレス",
+                "desc": "60kg*10回*3セット",
                 "status": "abandoned",
                 "scheduled_begin_dt" : Calendar.current.date(from: DateComponents(year: 2023, month: 7, day: 29, hour: 12, minute: 30)),
                 "scheduled_end_dt" : Calendar.current.date(from: DateComponents(year: 2023, month: 7, day: 29, hour: 13, minute: 30)),
@@ -51,7 +50,7 @@ class Seeder {
             [
                 "id" : UUID(),
                 "name": "トレーニングの記録",
-                "desc": "ベンチプレスを10回×3セット行った",
+                "desc": "ベンチプレスを目標通り10回3セット実行できた。",
                 "created_dt" : Date(),
                 "updated_dt" : Date()
             ]
