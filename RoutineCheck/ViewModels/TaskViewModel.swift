@@ -151,7 +151,6 @@ class TaskViewModel: ObservableObject {
             let nsError = error as NSError
             fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }
-        return 0
     }
     
     
