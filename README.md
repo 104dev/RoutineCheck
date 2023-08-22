@@ -2,7 +2,7 @@
 
  [![swift-version](https://img.shields.io/badge/Swift-5.8-brightgreen.svg?logo=swift)](https://github.com/apple/swift)  [![swift-version](https://img.shields.io/badge/iOS-16-brightgreen.svg)](https://github.com/apple/swift)
 
-[App Store](https://apps.apple.com/jp/app/routine-checker/id6462190861) | [WebSite](https://www.notion.so/104-xyz-064e9bb668f94ac290f72984707bfe92) | [Document](https://thoughtful-forsythia-6c8.notion.site/RoutineCheck-70cb85966ae347b987be10637ac8e3d1?pvs=4) | [Figma](https://www.figma.com/file/LsdmGqG6cdVhKvnUHQZvd5/RoutineCheckerDesign?type=design&node-id=601%3A424&mode=design&t=cTnXGs9TmmdASK2F-1) | [Zenn](https://zenn.dev/104/articles/e6bb2dfae2ead3)
+[App Store](https://apps.apple.com/jp/app/routine-checker/id6462190861) | [WebSite](https://www.notion.so/104-xyz-064e9bb668f94ac290f72984707bfe92) | [Document](https://thoughtful-forsythia-6c8.notion.site/RoutineCheck-70cb85966ae347b987be10637ac8e3d1?pvs=4) | [Figma](https://www.figma.com/file/LsdmGqG6cdVhKvnUHQZvd5/RoutineCheckerDesign?type=design&node-id=601%3A424&mode=design&t=cTnXGs9TmmdASK2F-1)
 
 ## 概要
 
