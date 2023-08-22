@@ -21,7 +21,7 @@ struct ContentView: View {
                   dismissButton: .default(Text("OK")))
         }
         .onAppear(){
-            var expiredTaskCount = taskViewModel.expiredTasksToAbondone()
+            let expiredTaskCount = taskViewModel.expiredTasksToAbondone()
             if expiredTaskCount != 0 {
                 expiredTaskAlertMessage = "\(expiredTaskCount)件のタスクが期限切れとなりました。"
                     showExpiredTaskAlert = true
