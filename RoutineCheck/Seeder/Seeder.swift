@@ -19,9 +19,9 @@ class Seeder {
                 "name": "ベンチプレス",
                 "desc": "60kg*10回*3セット",
                 "status": "scheduled",
-                "scheduled_begin_dt" : Calendar.current.date(from: DateComponents(year: 2023, month: 7, day: 27, hour: 12, minute: 30)),
-                "scheduled_end_dt" : Calendar.current.date(from: DateComponents(year: 2023, month: 7, day: 27, hour: 13, minute: 30)),
-                "expired_dt" : Calendar.current.date(from: DateComponents(year: 2023, month: 8, day: 3, hour: 23, minute: 59)),
+                "scheduled_begin_dt" : Calendar.current.date(from: DateComponents(year: 2023, month: 7, day: 27, hour: 12, minute: 30)) ?? Date(),
+                "scheduled_end_dt" : Calendar.current.date(from: DateComponents(year: 2023, month: 7, day: 27, hour: 13, minute: 30)) ?? Date(),
+                "expired_dt" : Calendar.current.date(from: DateComponents(year: 2023, month: 8, day: 3, hour: 23, minute: 59)) ?? Date(),
                 "created_dt" : Date()
             ],
             [
@@ -29,9 +29,9 @@ class Seeder {
                 "name": "ベンチプレス",
                 "desc": "60kg*10回*3セット",
                 "status": "completed",
-                "scheduled_begin_dt" : Calendar.current.date(from: DateComponents(year: 2023, month: 7, day: 28, hour: 12, minute: 30)),
-                "scheduled_end_dt" : Calendar.current.date(from: DateComponents(year: 2023, month: 7, day: 28, hour: 13, minute: 30)),
-                "expired_dt" : Calendar.current.date(from: DateComponents(year: 2023, month: 8, day: 4, hour: 23, minute: 59)),
+                "scheduled_begin_dt" : Calendar.current.date(from: DateComponents(year: 2023, month: 7, day: 28, hour: 12, minute: 30)) ?? Date(),
+                "scheduled_end_dt" : Calendar.current.date(from: DateComponents(year: 2023, month: 7, day: 28, hour: 13, minute: 30)) ?? Date(),
+                "expired_dt" : Calendar.current.date(from: DateComponents(year: 2023, month: 8, day: 4, hour: 23, minute: 59)) ?? Date(),
                 "created_dt" : Date()
             ],
             [
@@ -39,9 +39,9 @@ class Seeder {
                 "name": "ベンチプレス",
                 "desc": "60kg*10回*3セット",
                 "status": "abandoned",
-                "scheduled_begin_dt" : Calendar.current.date(from: DateComponents(year: 2023, month: 7, day: 29, hour: 12, minute: 30)),
-                "scheduled_end_dt" : Calendar.current.date(from: DateComponents(year: 2023, month: 7, day: 29, hour: 13, minute: 30)),
-                "expired_dt" : Calendar.current.date(from: DateComponents(year: 2023, month: 8, day: 5, hour: 23, minute: 59)),
+                "scheduled_begin_dt" : Calendar.current.date(from: DateComponents(year: 2023, month: 7, day: 29, hour: 12, minute: 30)) ?? Date(),
+                "scheduled_end_dt" : Calendar.current.date(from: DateComponents(year: 2023, month: 7, day: 29, hour: 13, minute: 30)) ?? Date(),
+                "expired_dt" : Calendar.current.date(from: DateComponents(year: 2023, month: 8, day: 5, hour: 23, minute: 59)) ?? Date(),
                 "created_dt" : Date()
             ]
         ]
