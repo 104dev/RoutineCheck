@@ -15,7 +15,6 @@ struct TaskEditView: View {
     @State var expiredDate = Calendar.current.date(byAdding: .weekOfYear, value: 1, to: Date()) ?? Date()
     @State var status : String = "scheduled"
     @State var project: Project? = nil
-    @State var task: Task?
     //一括作成に関わる情報
     @State private var bulkTaskCount: Int = 0
     @State private var showBulkIntervalSelection: Bool = false

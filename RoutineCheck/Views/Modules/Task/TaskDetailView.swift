@@ -315,8 +315,7 @@ struct TaskDetailView: View {
                 startDate: taskDetailViewModel.task.scheduled_begin_dt ?? Date(),
                 endDate: taskDetailViewModel.task.scheduled_end_dt ?? Date(),
                 expiredDate: taskDetailViewModel.task.expired_dt ?? Date(),
-                status: taskDetailViewModel.task.status ,
-                task: taskDetailViewModel.task
+                status: taskDetailViewModel.task.status
             )
         })
         .sheet(isPresented: $isTaskCreateByCopyModalPresented, content: {
