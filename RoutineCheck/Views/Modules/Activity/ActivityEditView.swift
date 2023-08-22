@@ -8,12 +8,8 @@ struct ActivityEditView: View {
     let project: Project?
     let task: Task?
     let activity: Activity?
-    @State private var taskUUID: UUID?
     @State private var title: String = ""
     @State private var desc: String = ""
-    @State private var startDate = Date()
-    @State private var endDate = Date()
-    @State private var expiredDate = Date()
     
     @EnvironmentObject var activityViewModel : ActivityViewModel
 
