@@ -78,7 +78,7 @@ struct TaskEditView: View {
                             isModalPresented = false
                         })
                         .padding()
-                        if let id {
+                        if id != nil {
                             Button("変更して保存", action: {
                                 saveTask()
                             })
