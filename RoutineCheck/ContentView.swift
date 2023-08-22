@@ -11,9 +11,7 @@ struct ContentView: View {
         
     var body: some View {
         NavigationStack {
-            VStack{
-                TabBarView()
-            }
+            TabBarView()
         }
         .alert(isPresented: $showExpiredTaskAlert) {
             Alert(title: Text("タスクの期限切れ"),
