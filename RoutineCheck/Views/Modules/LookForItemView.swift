@@ -12,7 +12,7 @@ struct LookForItemView: View {
     
     @State var commonMenuFloatBtnSelected = false
     @State var isProjectCreateModalPresented = false
-    
+        
     struct SegmentedControlView : View {
         @Binding var selectedItemType: AppConstants.ItemType
         @EnvironmentObject var projectViewModel: ProjectViewModel
@@ -82,7 +82,86 @@ struct LookForItemView: View {
         }
     }
     
+    struct FloatingButton : View {
+        
+        @Binding var selectedItemType: AppConstants.ItemType
+        @Binding var floatBtnSelected: Bool
+        @Binding var isProjectCreateModalPresented : Bool
+        
+        var body: some View{
+            if selectedItemType == .project {
+                VStack{
+                    Spacer()
+                    if(floatBtnSelected){
+                        VStack{
+                            FloatingMenu(floatBtnSelected: floatBtnSelected)
+                        }
+                    }
+                    HStack {
+                        Spacer()
+                        Button(action: {
+                            withAnimation(.easeInOut) {
+                                floatBtnSelected.toggle()
+                            }
+                        }, label: {
+                            Image(systemName: floatBtnSelected ? "xmark" : "pencil")
+                                .foregroundColor(.black)
+                                .font(.system(size: 24))
+                        })
+                        .frame(width: 60, height: 60)
+                        .background(Color(.systemGray6))
+                        .cornerRadius(30.0)
+                        .shadow(color: .gray, radius: 3, x: 3, y: 3)
+                        .padding(EdgeInsets(top: 0, leading: 0, bottom: 16.0, trailing: 16.0))
+                    }
+                }
+            }
+
+        }
+    }
     
+    struct FloatingMenu : View {
+        
+        @State private var isProjectCreateModalPresented = false
+        @State var floatBtnSelected : Bool
+        
+        var body: some View {
+            HStack{
+                Spacer()
+                Button(action:{
+                    isProjectCreateModalPresented = true
+                } ) {
+                    Spacer()
+                    ZStack{
+                        Circle()
+                            .foregroundColor(.blue)
+                            .frame(width: 32, height: 32)
+                        Image(systemName: "plus")
+                            .foregroundColor(.white)
+                            .font(.system(size: 12))
+                    }
+                    Text("プロジェクトを作成")
+                        .foregroundColor(.white)
+                        .font(.caption)
+                        .padding(4)
+                        .frame(maxWidth: .infinity)
+                        .background(Color.blue)
+                        .cornerRadius(3)
+                }
+                .frame(width: 240, height: 20)
+                .padding(EdgeInsets(top: 0, leading: 0, bottom: 16.0, trailing: 16.0))
+            }
+            .sheet(isPresented: $isProjectCreateModalPresented, content: {
+                ProjectEditView(
+                    isModalPresented: $isProjectCreateModalPresented, isFloatBtnSelected: $floatBtnSelected,
+                    project: nil
+                )
+            })
+
+        }
+        
+    }
+
     var body: some View {
         NavigationStack {
             ZStack{
@@ -100,65 +179,8 @@ struct LookForItemView: View {
                     fetchAllItems()
                 }
                 //ここからフローティングメニュー
-                if selectedItemType == .project {
-                    VStack{
-                        Spacer()
-                        if(commonMenuFloatBtnSelected){
-                            VStack{
-                                HStack{
-                                    Spacer()
-                                    Button(action:{
-                                        isProjectCreateModalPresented = true
-                                    } ) {
-                                        Spacer()
-                                        ZStack{
-                                            Circle()
-                                                .foregroundColor(.blue)
-                                                .frame(width: 32, height: 32)
-                                            Image(systemName: "plus")
-                                                .foregroundColor(.white)
-                                                .font(.system(size: 12))
-                                        }
-                                        Text("プロジェクトを作成")
-                                            .foregroundColor(.white)
-                                            .font(.caption)
-                                            .padding(4)
-                                            .frame(maxWidth: .infinity)
-                                            .background(Color.blue)
-                                            .cornerRadius(3)
-                                    }
-                                    .frame(width: 240, height: 20)
-                                    .padding(EdgeInsets(top: 0, leading: 0, bottom: 16.0, trailing: 16.0))
-                                }
-                            }
-                        }
-                        HStack {
-                            Spacer()
-                            Button(action: {
-                                withAnimation(.easeInOut) {
-                                    commonMenuFloatBtnSelected.toggle()
-                                }
-                            }, label: {
-                                Image(systemName: commonMenuFloatBtnSelected ? "xmark" : "pencil")
-                                    .foregroundColor(.black)
-                                    .font(.system(size: 24))
-                            })
-                            .frame(width: 60, height: 60)
-                            .background(Color(.systemGray6))
-                            .cornerRadius(30.0)
-                            .shadow(color: .gray, radius: 3, x: 3, y: 3)
-                            .padding(EdgeInsets(top: 0, leading: 0, bottom: 16.0, trailing: 16.0))
-                        }
-                    }
-                }
+                FloatingButton(selectedItemType: $selectedItemType, floatBtnSelected: $commonMenuFloatBtnSelected, isProjectCreateModalPresented: $isProjectCreateModalPresented)
             }
-            .sheet(isPresented: $isProjectCreateModalPresented, content: {
-                ProjectEditView(
-                    isModalPresented: $isProjectCreateModalPresented, isFloatBtnSelected: $commonMenuFloatBtnSelected,
-                    project: nil
-                    
-                )
-            })
         }
     }
     
