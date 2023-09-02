@@ -20,4 +20,18 @@ enum AppConstants {
         }
     }
     
+    enum TaskStatus : String {
+        case scheduled = "予定"
+        case abandoned = "断念"
+        case completed = "完了"
+        
+        var taskStatusValue : String {
+            switch self {
+                case .scheduled : return "scheduled"
+                case .abandoned : return "abandoned"
+                case .completed : return "completed"
+            }
+        }
+    }
+    
 }
