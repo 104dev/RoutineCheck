@@ -1,42 +1,52 @@
 import SwiftUI
 
 struct LookForItemView: View {
-
+    
     @EnvironmentObject var taskViewModel : TaskViewModel
     @EnvironmentObject var activityViewModel : ActivityViewModel
     @EnvironmentObject var projectViewModel : ProjectViewModel
     
+    @State private var selectedItemType = AppConstants.ItemType.project
+    
     @State private var searchText = ""
     
-
-    @State private var selectedItemType = AppConstants.ItemType.project
     @State var commonMenuFloatBtnSelected = false
     @State var isProjectCreateModalPresented = false
-
+    
+    struct SegmentedControlView : View {
+        @Binding var selectedItemType: AppConstants.ItemType
+        @EnvironmentObject var projectViewModel: ProjectViewModel
+        @EnvironmentObject var taskViewModel: TaskViewModel
+        @EnvironmentObject var activityViewModel: ActivityViewModel
+        
+        var body: some View {
+            Picker("", selection: $selectedItemType) {
+                ForEach(AppConstants.ItemType.allCases) {
+                    ItemType in
+                    Text(ItemType.rawValue).tag(ItemType)
+                }
+            }
+            .pickerStyle(.segmented)
+            .padding()
+            .onChange(of: selectedItemType) { newItemType in
+                switch newItemType {
+                case .project:
+                    projectViewModel.fetchProjects()
+                case .task:
+                    taskViewModel.fetchTasks()
+                case .activity:
+                    activityViewModel.fetchActivities()
+                }
+            }
+        }
+    }
     
     var body: some View {
         NavigationStack {
             ZStack{
                 VStack(alignment: .leading) {
                     SearchBar(text: $searchText)
-                    Picker("アイテム", selection: $selectedItemType) {
-                        ForEach(AppConstants.ItemType.allCases) {
-                            ItemType in
-                            Text(ItemType.rawValue).tag(ItemType)
-                        }
-                    }
-                    .pickerStyle(.segmented)
-                    .padding()
-                    .onChange(of: selectedItemType) { newItemType in
-                        switch newItemType {
-                        case .project:
-                            projectViewModel.fetchProjects()
-                        case .task:
-                            taskViewModel.fetchTasks()
-                        case .activity:
-                            activityViewModel.fetchActivities()
-                        }
-                    }
+                    SegmentedControlView(selectedItemType: $selectedItemType)
                     ScrollView{
                         switch selectedItemType {
                         case .task:
@@ -71,10 +81,10 @@ struct LookForItemView: View {
                 }
                 .navigationBarTitleDisplayMode(.inline)
                 .onAppear() {
-                    fetchItems()
+                    fetchAllItems()
                 }
                 .onChange(of: searchText) { newtext in
-                    fetchItems()
+                    fetchAllItems()
                 }
                 //ここからフローティングメニュー
                 if selectedItemType == .project {
@@ -132,14 +142,15 @@ struct LookForItemView: View {
             .sheet(isPresented: $isProjectCreateModalPresented, content: {
                 ProjectEditView(
                     isModalPresented: $isProjectCreateModalPresented, isFloatBtnSelected: $commonMenuFloatBtnSelected,
-            project: nil
+                    project: nil
                     
                 )
             })
         }
     }
     
-    func fetchItems(){
+    
+    func fetchAllItems(){
         if searchText.isEmpty {
             projectViewModel.fetchProjects()
             taskViewModel.fetchTasks()
@@ -150,7 +161,7 @@ struct LookForItemView: View {
             activityViewModel.fetchActivities(withName: searchText)
         }
     }
-        
+    
 }
 
 
