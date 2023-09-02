@@ -4,7 +4,7 @@ struct ProjectDetailView: View {
     
     @EnvironmentObject var taskViewModel : TaskViewModel
     @EnvironmentObject var activityViewModel : ActivityViewModel
-    @State private var selectedItemType = ItemType.task
+    @State private var selectedItemType = AppConstants.ItemTypeRelatedToProject.task
     @State  var isPresented : Bool = false
     @State var projectFloetBtnSelected = false
     @State var isProjectEditModalPresented = false
@@ -17,13 +17,6 @@ struct ProjectDetailView: View {
     init(project: Project) {
         self.project = project
         _projectDetailViewModel = StateObject(wrappedValue: ProjectDetailViewModel(project: project))
-    }
-
-    enum ItemType: String, CaseIterable, Identifiable {
-        case task = "タスク"
-        case activity = "アクティビティ"
-        
-        var id: String { rawValue }
     }
     
     let project : Project
@@ -52,7 +45,7 @@ struct ProjectDetailView: View {
                     }.padding(.leading, 20)
                     
                     Picker("アイテム", selection: $selectedItemType) {
-                        ForEach(ItemType.allCases) {
+                        ForEach(AppConstants.ItemTypeRelatedToProject.allCases) {
                             ItemType in
                             Text(ItemType.rawValue).tag(ItemType)
                         }
