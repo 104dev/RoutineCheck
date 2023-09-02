@@ -8,15 +8,8 @@ struct LookForItemView: View {
     
     @State private var searchText = ""
     
-    enum ItemType: String, CaseIterable, Identifiable {
-        case project = "プロジェクト"
-        case task = "タスク"
-        case activity = "アクティビティ"
-        
-        var id: String { rawValue }
-    }
 
-    @State private var selectedItemType = ItemType.project
+    @State private var selectedItemType = AppConstants.ItemType.project
     @State var commonMenuFloatBtnSelected = false
     @State var isProjectCreateModalPresented = false
 
@@ -27,7 +20,7 @@ struct LookForItemView: View {
                 VStack(alignment: .leading) {
                     SearchBar(text: $searchText)
                     Picker("アイテム", selection: $selectedItemType) {
-                        ForEach(ItemType.allCases) {
+                        ForEach(AppConstants.ItemType.allCases) {
                             ItemType in
                             Text(ItemType.rawValue).tag(ItemType)
                         }

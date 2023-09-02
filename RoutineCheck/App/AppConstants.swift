@@ -42,6 +42,26 @@ enum AppConstants {
         }
     }
     
-    
+    enum calendarViewType: String, CaseIterable, Identifiable {
+        case monthly = "月"
+        case weekly = "週"
+        
+        var id: String { rawValue }
+    }
+
+    enum ItemType: String, CaseIterable, Identifiable {
+        case project = "プロジェクト"
+        case task = "タスク"
+        case activity = "アクティビティ"
+        
+        var id: String { rawValue }
+    }
+
+    enum ItemTypeRelatedToProject: String, CaseIterable, Identifiable {
+        case task = "タスク"
+        case activity = "アクティビティ"
+        
+        var id: String { rawValue }
+    }
     
 }
