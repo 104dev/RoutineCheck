@@ -42,6 +42,11 @@ enum AppConstants {
         }
     }
     
-    
+    enum calendarViewType: String, CaseIterable, Identifiable {
+        case monthly = "月"
+        case weekly = "週"
+        
+        var id: String { rawValue }
+    }
     
 }

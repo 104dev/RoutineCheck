@@ -2,14 +2,7 @@ import SwiftUI
 
 
 struct CalendarView: View {
-    
-    enum selectedViewType: String, CaseIterable, Identifiable {
-        case monthly = "月"
-        case weekly = "週"
-        var id: String { rawValue }
-    }
-    
-    @State private var selectedView : selectedViewType = .monthly
+        
     @Binding var selectedDate: Date
     @State var currentMonth: Int = 0
     
