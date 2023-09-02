@@ -71,26 +71,10 @@ struct LookForItemView: View {
                 }
                 .navigationBarTitleDisplayMode(.inline)
                 .onAppear() {
-                    if searchText.isEmpty {
-                        projectViewModel.fetchProjects()
-                        taskViewModel.fetchTasks()
-                        activityViewModel.fetchActivities()
-                    } else {
-                        projectViewModel.fetchProjects(withName: searchText)
-                        taskViewModel.fetchTasks(withName: searchText)
-                        activityViewModel.fetchActivities(withName: searchText)
-                    }
+                    fetchItems()
                 }
                 .onChange(of: searchText) { newtext in
-                    if searchText.isEmpty {
-                        projectViewModel.fetchProjects()
-                        taskViewModel.fetchTasks()
-                        activityViewModel.fetchActivities()
-                    } else {
-                        projectViewModel.fetchProjects(withName: searchText)
-                        taskViewModel.fetchTasks(withName: searchText)
-                        activityViewModel.fetchActivities(withName: searchText)
-                    }
+                    fetchItems()
                 }
                 //ここからフローティングメニュー
                 if selectedItemType == .project {
@@ -155,7 +139,20 @@ struct LookForItemView: View {
         }
     }
     
+    func fetchItems(){
+        if searchText.isEmpty {
+            projectViewModel.fetchProjects()
+            taskViewModel.fetchTasks()
+            activityViewModel.fetchActivities()
+        } else {
+            projectViewModel.fetchProjects(withName: searchText)
+            taskViewModel.fetchTasks(withName: searchText)
+            activityViewModel.fetchActivities(withName: searchText)
+        }
+    }
+        
 }
+
 
 struct SearchBar: UIViewRepresentable {
     @Binding var text: String
