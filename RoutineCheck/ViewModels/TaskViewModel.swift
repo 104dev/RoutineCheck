@@ -142,7 +142,7 @@ class TaskViewModel: ObservableObject {
         do {
             let tasksToUpdate = try viewContext.fetch(request)
             for task in tasksToUpdate {
-                task.status = "abandoned"
+                task.status = AppConstants.TaskStatus.abandoned.rawValue
             }
             try viewContext.save()
             let expiredTaskCount = tasksToUpdate.count
@@ -151,7 +151,6 @@ class TaskViewModel: ObservableObject {
             let nsError = error as NSError
             fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }
-        return 0
     }
     
     
@@ -186,7 +185,7 @@ class TaskViewModel: ObservableObject {
             if index == 0 {
                 newTask.status = status
             } else {
-                newTask.status = "scheduled"
+                newTask.status = AppConstants.TaskStatus.scheduled.rawValue
             }
             
             switch bulkInterval {

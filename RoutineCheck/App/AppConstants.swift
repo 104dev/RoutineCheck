@@ -5,9 +5,9 @@ import Foundation
 enum AppConstants {
     
     enum BulkInterval : String {
-        case day = "毎日"
-        case week = "1週間毎"
-        case month =  "1ヶ月毎"
+        case day
+        case week
+        case month
         
         var calendarComponent : Calendar.Component {
             switch self {
@@ -18,20 +18,30 @@ enum AppConstants {
                 
             }
         }
-    }
-    
-    enum TaskStatus : String {
-        case scheduled = "予定"
-        case abandoned = "断念"
-        case completed = "完了"
         
-        var taskStatusValue : String {
+        var text : String {
             switch self {
-                case .scheduled : return "scheduled"
-                case .abandoned : return "abandoned"
-                case .completed : return "completed"
+            case .day : return "毎日"
+            case .week : return "1週間毎"
+            case .month : return "1ヶ月毎"
             }
         }
     }
+    
+    enum TaskStatus : String {
+        case scheduled = "scheduled"
+        case abandoned = "abandoned"
+        case completed = "completed"
+        
+        var text : String {
+            switch self {
+                case .scheduled : return "予定"
+                case .abandoned : return "断念"
+                case .completed : return "完了"
+            }
+        }
+    }
+    
+    
     
 }

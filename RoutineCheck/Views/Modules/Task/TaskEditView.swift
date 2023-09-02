@@ -13,7 +13,7 @@ struct TaskEditView: View {
     @State var startDate = Calendar.current.date(bySettingHour: Calendar.current.component(.hour, from: Date()), minute: 0, second: 0, of: Date()) ?? Date()
     @State var endDate = Calendar.current.date(bySettingHour: Calendar.current.component(.hour, from: Date()) + 1, minute: 0, second: 0, of: Date()) ?? Date()
     @State var expiredDate = Calendar.current.date(byAdding: .weekOfYear, value: 1, to: Date()) ?? Date()
-    @State var status : String = "scheduled"
+    @State var status : String = AppConstants.TaskStatus.scheduled.rawValue
     @State var project: Project? = nil
     @State var task: Task?
     //一括作成に関わる情報
@@ -33,9 +33,9 @@ struct TaskEditView: View {
                     List{
                         Section{
                             Picker("ステータス", selection: $status){
-                                Text("予定").tag("scheduled")
-                                Text("完了").tag("completed")
-                                Text("断念").tag("abandoned")
+                                Text(AppConstants.TaskStatus.scheduled.text).tag(AppConstants.TaskStatus.scheduled.rawValue)
+                                Text(AppConstants.TaskStatus.completed.text).tag(AppConstants.TaskStatus.completed.rawValue)
+                                Text(AppConstants.TaskStatus.abandoned.text).tag(AppConstants.TaskStatus.abandoned.rawValue)
                             }.onChange(of: status) { newValue in
                                 print("Selected option changed to: \(newValue)")
                             }
@@ -66,9 +66,9 @@ struct TaskEditView: View {
                                 }
                                 if(showBulkIntervalSelection){
                                     Picker("一括作成の間隔", selection: $bulkInterval) {
-                                        Text(AppConstants.BulkInterval.day.rawValue).tag(AppConstants.BulkInterval.day)
-                                        Text(AppConstants.BulkInterval.week.rawValue).tag(AppConstants.BulkInterval.week)
-                                        Text(AppConstants.BulkInterval.month.rawValue).tag(AppConstants.BulkInterval.month)
+                                        Text(AppConstants.BulkInterval.day.text).tag(AppConstants.BulkInterval.day)
+                                        Text(AppConstants.BulkInterval.week.text).tag(AppConstants.BulkInterval.week)
+                                        Text(AppConstants.BulkInterval.month.text).tag(AppConstants.BulkInterval.month)
                                     }
                                 }
                             }
