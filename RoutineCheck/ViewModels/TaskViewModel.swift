@@ -142,7 +142,7 @@ class TaskViewModel: ObservableObject {
         do {
             let tasksToUpdate = try viewContext.fetch(request)
             for task in tasksToUpdate {
-                task.status = "abandoned"
+                task.status = AppConstants.TaskStatus.abandoned.rawValue
             }
             try viewContext.save()
             let expiredTaskCount = tasksToUpdate.count
@@ -151,7 +151,6 @@ class TaskViewModel: ObservableObject {
             let nsError = error as NSError
             fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }
-        return 0
     }
     
     
@@ -172,7 +171,7 @@ class TaskViewModel: ObservableObject {
         expired_dt: Date,
         project: Project?,
         bulkTaskCount: Int,
-        bulkInterval: Int
+        bulkInterval: AppConstants.BulkInterval
     ){
         var intervalComponents: Calendar.Component
         
@@ -186,19 +185,16 @@ class TaskViewModel: ObservableObject {
             if index == 0 {
                 newTask.status = status
             } else {
-                newTask.status = "scheduled"
+                newTask.status = AppConstants.TaskStatus.scheduled.rawValue
             }
             
-            print(bulkInterval)
             switch bulkInterval {
-            case 1:
-                intervalComponents = .day
-            case 2:
-                intervalComponents = .weekOfYear
-            case 3:
-                intervalComponents = .month
-            default:
-                intervalComponents = .day
+            case .day:
+                intervalComponents = AppConstants.BulkInterval.day.calendarComponent
+            case .week:
+                intervalComponents = AppConstants.BulkInterval.week.calendarComponent
+            case .month:
+                intervalComponents = AppConstants.BulkInterval.month.calendarComponent
             }
             newTask.scheduled_begin_dt = calendar.date(byAdding: intervalComponents, value: index + 1, to: scheduled_begin_dt)!
             newTask.scheduled_end_dt = calendar.date(byAdding: intervalComponents,value: index + 1, to: scheduled_end_dt)!
