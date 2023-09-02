@@ -19,7 +19,7 @@ struct TaskEditView: View {
     //一括作成に関わる情報
     @State private var bulkTaskCount: Int = 0
     @State private var showBulkIntervalSelection: Bool = false
-    @State private var bulkInterval: Int = 1
+    @State private var bulkInterval: AppConstants.BulkInterval = .day
     
     @EnvironmentObject var taskViewModel : TaskViewModel
 
@@ -66,9 +66,9 @@ struct TaskEditView: View {
                                 }
                                 if(showBulkIntervalSelection){
                                     Picker("一括作成の間隔", selection: $bulkInterval) {
-                                        Text("毎日").tag(1)
-                                        Text("1週間毎").tag(2)
-                                        Text("1ヶ月毎").tag(3)
+                                        Text(AppConstants.BulkInterval.day.rawValue).tag(AppConstants.BulkInterval.day)
+                                        Text(AppConstants.BulkInterval.week.rawValue).tag(AppConstants.BulkInterval.week)
+                                        Text(AppConstants.BulkInterval.month.rawValue).tag(AppConstants.BulkInterval.month)
                                     }
                                 }
                             }

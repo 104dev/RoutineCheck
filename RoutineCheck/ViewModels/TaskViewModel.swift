@@ -172,7 +172,7 @@ class TaskViewModel: ObservableObject {
         expired_dt: Date,
         project: Project?,
         bulkTaskCount: Int,
-        bulkInterval: Int
+        bulkInterval: AppConstants.BulkInterval
     ){
         var intervalComponents: Calendar.Component
         
@@ -189,16 +189,13 @@ class TaskViewModel: ObservableObject {
                 newTask.status = "scheduled"
             }
             
-            print(bulkInterval)
             switch bulkInterval {
-            case 1:
-                intervalComponents = .day
-            case 2:
-                intervalComponents = .weekOfYear
-            case 3:
-                intervalComponents = .month
-            default:
-                intervalComponents = .day
+            case .day:
+                intervalComponents = AppConstants.BulkInterval.day.calendarComponent
+            case .week:
+                intervalComponents = AppConstants.BulkInterval.week.calendarComponent
+            case .month:
+                intervalComponents = AppConstants.BulkInterval.month.calendarComponent
             }
             newTask.scheduled_begin_dt = calendar.date(byAdding: intervalComponents, value: index + 1, to: scheduled_begin_dt)!
             newTask.scheduled_end_dt = calendar.date(byAdding: intervalComponents,value: index + 1, to: scheduled_end_dt)!

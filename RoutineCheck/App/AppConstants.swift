@@ -4,10 +4,10 @@ import Foundation
 
 enum AppConstants {
     
-    enum BulkInterval {
-        case day
-        case week
-        case month
+    enum BulkInterval : String {
+        case day = "毎日"
+        case week = "1週間毎"
+        case month =  "1ヶ月毎"
         
         var calendarComponent : Calendar.Component {
             switch self {
