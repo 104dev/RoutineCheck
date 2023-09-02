@@ -41,42 +41,55 @@ struct LookForItemView: View {
         }
     }
     
+    struct ItemListView : View{
+        
+        @Binding var selectedItemType: AppConstants.ItemType
+        @EnvironmentObject var projectViewModel: ProjectViewModel
+        @EnvironmentObject var taskViewModel: TaskViewModel
+        @EnvironmentObject var activityViewModel: ActivityViewModel
+            
+        var body: some View {
+            ScrollView{
+                switch selectedItemType {
+                case .task:
+                    ForEach(taskViewModel.tasks, id: \.self) { task in
+                        NavigationLink(destination: TaskDetailView(task: task)) {
+                            TaskCardView(task: task)
+                                .padding(.vertical, 10)
+                                .foregroundColor(.black)
+                        }
+                    }
+                case .project:
+                    ForEach(projectViewModel.projects, id: \.self) { project in
+                        NavigationLink(destination: ProjectDetailView(project: project)) {
+                            ProjectCardView(project: project)
+                                .padding(.vertical, 10)
+                                .foregroundColor(.black)
+                        }
+                    }
+                case .activity:
+                    ForEach(activityViewModel.activities, id: \.self) { activity in
+                        HStack{
+                            NavigationLink(destination: ActivityDetailView(activity: activity)) {
+                                ActivityCardView(activity: activity)
+                                    .padding(.vertical, 10)
+                                    .foregroundColor(.black)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    
     var body: some View {
         NavigationStack {
             ZStack{
                 VStack(alignment: .leading) {
                     SearchBar(text: $searchText)
                     SegmentedControlView(selectedItemType: $selectedItemType)
-                    ScrollView{
-                        switch selectedItemType {
-                        case .task:
-                            ForEach(taskViewModel.tasks, id: \.self) { task in
-                                NavigationLink(destination: TaskDetailView(task: task)) {
-                                    TaskCardView(task: task)
-                                        .padding(.vertical, 10)
-                                        .foregroundColor(.black)
-                                }
-                            }
-                        case .project:
-                            ForEach(projectViewModel.projects, id: \.self) { project in
-                                NavigationLink(destination: ProjectDetailView(project: project)) {
-                                    ProjectCardView(project: project)
-                                        .padding(.vertical, 10)
-                                        .foregroundColor(.black)
-                                }
-                            }
-                        case .activity:
-                            ForEach(activityViewModel.activities, id: \.self) { activity in
-                                HStack{
-                                    NavigationLink(destination: ActivityDetailView(activity: activity)) {
-                                        ActivityCardView(activity: activity)
-                                            .padding(.vertical, 10)
-                                            .foregroundColor(.black)
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    ItemListView(selectedItemType: $selectedItemType)
                     Spacer()
                 }
                 .navigationBarTitleDisplayMode(.inline)
