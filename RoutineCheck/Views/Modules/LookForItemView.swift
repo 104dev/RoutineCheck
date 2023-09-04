@@ -152,9 +152,8 @@ struct LookForItemView: View {
                 .padding(EdgeInsets(top: 0, leading: 0, bottom: 16.0, trailing: 16.0))
             }
             .sheet(isPresented: $isProjectCreateModalPresented, content: {
-                ProjectEditView(
-                    isModalPresented: $isProjectCreateModalPresented, isFloatBtnSelected: $floatBtnSelected,
-                    project: nil
+                ProjectAddView(
+                    isModalPresented: $isProjectCreateModalPresented, isFloatBtnSelected: $floatBtnSelected
                 )
             })
 

@@ -1,10 +1,11 @@
+//
+
 import SwiftUI
 
-struct ProjectEditView: View {
-    
+struct ProjectAddView: View {
+
     @Binding var isModalPresented: Bool
     @Binding var isFloatBtnSelected: Bool
-    @ObservedObject var project: Project
     @State private var title: String = ""
     @State private var desc: String = ""
     @EnvironmentObject var projectViewModel : ProjectViewModel
@@ -22,33 +23,22 @@ struct ProjectEditView: View {
                 })
                 .padding()
                 Button("保存", action: {
-                    saveProject()
+                    addProject()
                 })
                 .padding()
             }
         }
         .background(Color(.systemGray6))
-        .onAppear {
-            setupInitialValues()
-        }
     }
     
-    private func setupInitialValues() {
-        title = project.name
-        desc = project.desc
-    }
-    
-    private func saveProject() {
-        projectViewModel.updateProject(
-            uuid: project.id,
+    private func addProject() {
+        projectViewModel.createProject(
             name: title,
             desc: desc
         )
         
-        project.name = title
-        project.desc = desc
         isModalPresented = false
         isFloatBtnSelected = false
     }
-    
+
 }

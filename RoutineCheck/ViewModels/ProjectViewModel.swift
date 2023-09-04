@@ -111,9 +111,9 @@ class ProjectViewModel: ObservableObject {
             if let targetProject = fetchedProjects.first {
                 targetProject.name = name
                 targetProject.desc = desc
+                try viewContext.save()
+                fetchProjects()
             }
-            try viewContext.save()
-            fetchProjects()
         } catch {
             let nsError = error as NSError
             fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
