@@ -35,54 +35,8 @@ struct ProjectDetailView: View {
                             Text("このプロジェクトの説明はありません。").foregroundColor(Color.gray)
                         }
                     }.padding(.leading, 20)
-                    Picker("アイテム", selection: $selectedItemType) {
-                        ForEach(AppConstants.ItemTypeRelatedToProject.allCases) {
-                            ItemType in
-                            Text(ItemType.rawValue).tag(ItemType)
-                        }
-                    }.pickerStyle(.segmented)
-                        .onChange(of: selectedItemType) { newItemType in
-                            switch newItemType {
-                            case .task:
-                                taskViewModel.fetchTasks()
-                            case .activity:
-                                activityViewModel.fetchActivities()
-                            }
-                        }
-                    
-                    if(selectedItemType == .task){
-                        if let projectTasks = projectDetailViewModel.project.tasks?.allObjects as? [Task], !projectTasks.isEmpty{
-                            ForEach(projectTasks, id: \.self) { task in
-                                Button {
-                                    isPresented = true
-                                } label: {
-                                    TaskCardView(task: task)
-                                        .padding(.vertical, 10)
-                                        .foregroundColor(.black)
-                                }.navigationDestination(isPresented: $isPresented){
-                                    TaskDetailView(task: task)
-                                }
-                            }.listRowInsets(EdgeInsets())
-                        } else {
-                            Text("関連づけられたタスクがありません")
-                        }
-                    }else if(selectedItemType == .activity){
-                        if let projectActivities = projectDetailViewModel.project.activities?.allObjects as? [Activity] , !projectActivities.isEmpty {
-                            ForEach(projectActivities, id: \.self) { activity in
-                                Button {
-                                    isPresented = true
-                                } label: {
-                                    ActivityCardView(activity: activity)
-                                        .padding(.vertical, 10)
-                                        .foregroundColor(.black)
-                                }.navigationDestination(isPresented: $isPresented){
-                                    ActivityDetailView(activity: activity)
-                                }
-                            }.listRowInsets(EdgeInsets())
-                        } else {
-                            Text("関連づけられたアクティビティがありません")
-                        }
-                    }
+                    SegmentedControl(selectedItemType: $selectedItemType, taskViewModel: taskViewModel, activityViewModel: activityViewModel)
+                    ItemListView(selectedItemType: $selectedItemType, isPresented: $isPresented, projectDetailViewModel: projectDetailViewModel)
                 }
                 .frame( maxWidth: .infinity)
                 .edgesIgnoringSafeArea(.all)
@@ -100,6 +54,72 @@ struct ProjectDetailView: View {
         .onAppear() {
             taskViewModel.fetchTasks()
             activityViewModel.fetchActivities()
+        }
+    }
+    
+    struct ItemListView : View {
+        @Binding var selectedItemType : AppConstants.ItemTypeRelatedToProject
+        @Binding var isPresented : Bool
+        @ObservedObject var projectDetailViewModel : ProjectDetailViewModel
+        
+        var body: some View {
+            if(selectedItemType == .task){
+                if let projectTasks = projectDetailViewModel.project.tasks?.allObjects as? [Task], !projectTasks.isEmpty{
+                    ForEach(projectTasks, id: \.self) { task in
+                        Button {
+                            isPresented = true
+                        } label: {
+                            TaskCardView(task: task)
+                                .padding(.vertical, 10)
+                                .foregroundColor(.black)
+                        }.navigationDestination(isPresented: $isPresented){
+                            TaskDetailView(task: task)
+                        }
+                    }.listRowInsets(EdgeInsets())
+                } else {
+                    Text("関連づけられたタスクがありません")
+                }
+            }else if(selectedItemType == .activity){
+                if let projectActivities = projectDetailViewModel.project.activities?.allObjects as? [Activity] , !projectActivities.isEmpty {
+                    ForEach(projectActivities, id: \.self) { activity in
+                        Button {
+                            isPresented = true
+                        } label: {
+                            ActivityCardView(activity: activity)
+                                .padding(.vertical, 10)
+                                .foregroundColor(.black)
+                        }.navigationDestination(isPresented: $isPresented){
+                            ActivityDetailView(activity: activity)
+                        }
+                    }.listRowInsets(EdgeInsets())
+                } else {
+                    Text("関連づけられたアクティビティがありません")
+                }
+            }
+            
+        }
+    }
+    
+    struct SegmentedControl : View {
+        @Binding var selectedItemType : AppConstants.ItemTypeRelatedToProject
+        @ObservedObject var taskViewModel : TaskViewModel
+        @ObservedObject var activityViewModel : ActivityViewModel
+        
+        var body: some View {
+            Picker("アイテム", selection: $selectedItemType) {
+                ForEach(AppConstants.ItemTypeRelatedToProject.allCases) {
+                    ItemType in
+                    Text(ItemType.rawValue).tag(ItemType)
+                }
+            }.pickerStyle(.segmented)
+                .onChange(of: selectedItemType) { newItemType in
+                    switch newItemType {
+                    case .task:
+                        taskViewModel.fetchTasks()
+                    case .activity:
+                        activityViewModel.fetchActivities()
+                    }
+                }
         }
     }
     
