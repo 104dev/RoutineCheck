@@ -6,9 +6,6 @@ struct ActivityDetailView: View {
     @EnvironmentObject var activityViewModel : ActivityViewModel
     let activity : Activity
     @State private var activityFloetBtnSelected = false
-    @State private var isActivityEditModalPresented = false
-    @State var isActivityDeleteActionSheet = false
-    @Environment(\.presentationMode) var presentationMode
     @StateObject private var activityDetailViewModel: ActivityDetailViewModel
     
     init(activity: Activity) {
@@ -79,84 +76,34 @@ struct ActivityDetailView: View {
                     }
                 }
                 .background(Color(.systemGray6))
+            FloatingButton(activityDetailViewModel: activityDetailViewModel, floatBtnSelected: $activityFloetBtnSelected)
+        }
+    }
+    
+    struct FloatingButton : View {
+        @ObservedObject var activityDetailViewModel : ActivityDetailViewModel
+        @Binding var floatBtnSelected: Bool
+        
+        var body: some View {
             VStack{
                 Spacer()
-                if(activityFloetBtnSelected){
+                if(floatBtnSelected){
                     VStack{
-                        HStack{
-                            Spacer()
-                            Button(action:{
-                                isActivityEditModalPresented = true
-                            } ) {
-                                Spacer()
-                                ZStack{
-                                    Circle()
-                                        .foregroundColor(.blue)
-                                        .frame(width: 32, height: 32)
-                                    Image(systemName: "book")
-                                        .foregroundColor(.white)
-                                        .font(.system(size: 12))
-                                }
-                                Text("アクティビティを編集")
-                                    .foregroundColor(.white)
-                                    .font(.caption)
-                                    .padding(4)
-                                    .frame(maxWidth: .infinity)
-                                    .background(Color.blue)
-                                    .cornerRadius(3)
-                            }
-                            .frame(width: 240, height: 20)
-                            .padding(EdgeInsets(top: 0, leading: 0, bottom: 16.0, trailing: 16.0))
-                        }
-                        HStack{
-                            Spacer()
-                            Button(action:{
-                                isActivityDeleteActionSheet = true
-                            } ) {
-                                Spacer()
-                                ZStack{
-                                    Circle()
-                                        .foregroundColor(.blue)
-                                        .frame(width: 32, height: 32)
-                                    Image(systemName: "trash.fill")
-                                        .foregroundColor(.white)
-                                        .font(.system(size: 12))
-                                }
-                                Text("アクティビティを削除")
-                                    .foregroundColor(.white)
-                                    .font(.caption)
-                                    .padding(4)
-                                    .frame(maxWidth: .infinity)
-                                    .background(Color.blue)
-                                    .cornerRadius(3)
-                            }
-                            .frame(width: 240, height: 20)
-                            .padding(EdgeInsets(top: 0, leading: 0, bottom: 16.0, trailing: 16.0))
-                            .actionSheet(isPresented: $isActivityDeleteActionSheet){
-                                ActionSheet(
-                                    title: Text("アクティビティの削除"),
-                                    message: Text("このアクティビティを削除してよろしいですか？"),
-                                    buttons: [
-                                        .destructive(Text("削除"), action: {
-                                            ActivityViewModel().deleteActivity(activity)
-                                            presentationMode.wrappedValue.dismiss()
-                                        }),
-                                        .cancel()
-                                    ]
-                                )
-                            }
-                        }
+                        ActivityEditOpener(floatBtnSelected: $floatBtnSelected, activityDetailViewModel: activityDetailViewModel)
+                        
+                        ActivityDeleteOpener(activityDetailViewModel: activityDetailViewModel)
                     }
                 }
+                
                 
                 HStack {
                     Spacer()
                     Button(action: {
                         withAnimation(.easeInOut) {
-                            activityFloetBtnSelected.toggle()
+                            floatBtnSelected = true
                         }
                     }, label: {
-                        Image(systemName: activityFloetBtnSelected ? "xmark" : "pencil")
+                        Image(systemName: floatBtnSelected ? "xmark" : "pencil")
                             .foregroundColor(.black)
                             .font(.system(size: 24))
                     })
@@ -167,15 +114,98 @@ struct ActivityDetailView: View {
                     .padding(EdgeInsets(top: 0, leading: 0, bottom: 16.0, trailing: 16.0))
                 }
             }
-            
         }
-        .sheet(isPresented: $isActivityEditModalPresented, content: {
-            ActivityEditView(
-                isModalPresented:$isActivityEditModalPresented, isFloatBtnSelected: $activityFloetBtnSelected, project: nil,
-                task: nil,
-                activity: activityDetailViewModel.activity
-            )
-        })
+        
+    }
+    
+    struct ActivityEditOpener : View {
+        @State private var isActivityEditModalPresented = false
+        @Binding var floatBtnSelected : Bool
+        @ObservedObject var  activityDetailViewModel : ActivityDetailViewModel
+        
+        var body: some View {
+            HStack{
+                Spacer()
+                Button(action:{
+                    isActivityEditModalPresented = true
+                } ) {
+                    Spacer()
+                    ZStack{
+                        Circle()
+                            .foregroundColor(.blue)
+                            .frame(width: 32, height: 32)
+                        Image(systemName: "book")
+                            .foregroundColor(.white)
+                            .font(.system(size: 12))
+                    }
+                    Text("アクティビティを編集")
+                        .foregroundColor(.white)
+                        .font(.caption)
+                        .padding(4)
+                        .frame(maxWidth: .infinity)
+                        .background(Color.blue)
+                        .cornerRadius(3)
+                }
+                .frame(width: 240, height: 20)
+                .padding(EdgeInsets(top: 0, leading: 0, bottom: 16.0, trailing: 16.0))
+            }
+            .sheet(isPresented: $isActivityEditModalPresented, content: {
+                ActivityEditView(
+                    isModalPresented:$isActivityEditModalPresented, isFloatBtnSelected: $floatBtnSelected, project: nil,
+                    task: nil,
+                    activity: activityDetailViewModel.activity
+                )
+            })
+        }
+    }
+    
+    struct ActivityDeleteOpener : View {
+        @State var isActivityDeleteActionSheet = false
+        @Environment(\.presentationMode) var presentationMode
+        @ObservedObject var  activityDetailViewModel : ActivityDetailViewModel
+        
+        var body: some View {
+            HStack{
+                Spacer()
+                Button(action:{
+                    isActivityDeleteActionSheet = true
+                } ) {
+                    Spacer()
+                    ZStack{
+                        Circle()
+                            .foregroundColor(.blue)
+                            .frame(width: 32, height: 32)
+                        Image(systemName: "trash.fill")
+                            .foregroundColor(.white)
+                            .font(.system(size: 12))
+                    }
+                    Text("アクティビティを削除")
+                        .foregroundColor(.white)
+                        .font(.caption)
+                        .padding(4)
+                        .frame(maxWidth: .infinity)
+                        .background(Color.blue)
+                        .cornerRadius(3)
+                }
+                .frame(width: 240, height: 20)
+                .padding(EdgeInsets(top: 0, leading: 0, bottom: 16.0, trailing: 16.0))
+                .actionSheet(isPresented: $isActivityDeleteActionSheet){
+                    ActionSheet(
+                        title: Text("アクティビティの削除"),
+                        message: Text("このアクティビティを削除してよろしいですか？"),
+                        buttons: [
+                            .destructive(Text("削除"), action: {
+                                ActivityViewModel().deleteActivity(activityDetailViewModel.activity)
+                                presentationMode.wrappedValue.dismiss()
+                            }),
+                            .cancel()
+                        ]
+                    )
+                }
+            }
+
+        }
+        
     }
 }
 
