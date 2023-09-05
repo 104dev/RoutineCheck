@@ -20,133 +20,6 @@ struct TaskDetailView: View {
         return formatter
     }
     
-    var body: some View {
-        ZStack{
-            VStack(alignment: .leading){
-                HStack{
-                    if let belongsToProjectName = taskDetailViewModel.task.project?.name as? String {
-                        Text("\(belongsToProjectName)").multilineTextAlignment(.leading)
-                    } else {
-                        Text("Unknown")
-                    }
-                    Spacer()
-                }.font(.callout)
-                    .padding(.bottom , 5)
-                    .padding(.leading, 20)
-                if !taskDetailViewModel.task.name.isEmpty {
-                    Text("\(taskDetailViewModel.task.name)").font(.system(size: 20)).fontWeight(.semibold)
-                        .padding(.leading, 20)
-                }else{
-                    Text("無題のタスク")
-                        .padding(.leading, 20)
-                }
-                List{
-                    Section(header: Text("説明")){
-                        if !taskDetailViewModel.task.desc.isEmpty{
-                            Text("\(taskDetailViewModel.task.desc)")
-                        }else{
-                            Text("このタスクの説明はありません。").foregroundColor(Color.gray)
-                        }
-                    }
-                    Section(header: Text("詳細情報")){
-                        HStack{
-                            Text("ステータス")
-                            Spacer()
-                            switch taskDetailViewModel.task.status {
-                            case "completed":
-                                Text("完了")
-                            case "scheduled":
-                                Text("実行予定")
-                            case "abandoned":
-                                Text("断念")
-                            default:
-                                Text("未設定")
-                            }
-                        }
-                        HStack{
-                            Text("開始予定")
-                            Spacer()
-                            if let scheduledBeginDate = taskDetailViewModel.task.scheduled_begin_dt {
-                                Text(dateFormatter.string(from: scheduledBeginDate))
-                            } else {
-                                Text("No schedule")
-                            }
-                        }
-                        HStack{
-                            Text("終了予定")
-                            Spacer()
-                            if let scheduledEndDate = taskDetailViewModel.task.scheduled_end_dt {
-                                Text(dateFormatter.string(from: scheduledEndDate))
-                            } else {
-                                Text("No schedule")
-                            }
-                        }
-                        HStack{
-                            Text("期日")
-                            Spacer()
-                            if let expiredDate = taskDetailViewModel.task.expired_dt {
-                                Text(dateFormatter.string(from: expiredDate))
-                            } else {
-                                Text("No expire")
-                            }
-                        }
-                        HStack{
-                            Text("作成日時")
-                            Spacer()
-                            if !taskDetailViewModel.task.isFault {
-                                Text(dateFormatter.string(from: taskDetailViewModel.task.created_dt))
-                            }
-                        }
-                        HStack{
-                            Text("最終更新日")
-                            Spacer()
-                            if let updatedDate = taskDetailViewModel.task.updated_dt {
-                                Text(dateFormatter.string(from: updatedDate))
-                            } else {
-                                Text("No data")
-                            }
-                        }
-                    }
-                    if let activities = taskDetailViewModel.task.activities?.allObjects as? [Activity], !activities.isEmpty {
-                        Section(header: Text("アクティビティ一覧")) {
-                            ForEach(activities, id: \.self) { activity in
-                                Button {
-                                    isActivityPresented = true
-                                } label: {
-                                    ActivityCardView(activity: activity)
-                                        .padding(.vertical, 10)
-                                        .foregroundColor(.black)
-                                }.navigationDestination(isPresented: $isActivityPresented){
-                                    ActivityDetailView(activity: activity)
-                                }
-                            }.listRowInsets(EdgeInsets())
-                        }
-                    } else {
-                        Section(header: Text("アクティビティ一覧")) {
-                            Text("関連づけられたアクティビティは存在しません。")
-                                .foregroundColor(Color.gray)
-                        }
-                    }
-                }
-                .frame( maxWidth: .infinity)
-                .edgesIgnoringSafeArea(.all)
-                .listStyle(GroupedListStyle())
-            }
-            .padding(10)
-            .background(Color(.systemGray6))
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .principal) {
-                    Text("タスク詳細")
-                        .fontWeight(.semibold)
-                }
-            }
-            FloatingButton(floatBtnSelected: $taskFloetBtnSelected, taskDetailViewModel: taskDetailViewModel)
-            
-        }
-
-    }
-    
     struct FloatingButton : View {
         
         @Binding var floatBtnSelected : Bool
@@ -394,5 +267,134 @@ struct TaskDetailView: View {
         }
         
     }
+    
+    var body: some View {
+        ZStack{
+            VStack(alignment: .leading){
+                HStack{
+                    if let belongsToProjectName = taskDetailViewModel.task.project?.name as? String {
+                        Text("\(belongsToProjectName)").multilineTextAlignment(.leading)
+                    } else {
+                        Text("Unknown")
+                    }
+                    Spacer()
+                }.font(.callout)
+                    .padding(.bottom , 5)
+                    .padding(.leading, 20)
+                if !taskDetailViewModel.task.name.isEmpty {
+                    Text("\(taskDetailViewModel.task.name)").font(.system(size: 20)).fontWeight(.semibold)
+                        .padding(.leading, 20)
+                }else{
+                    Text("無題のタスク")
+                        .padding(.leading, 20)
+                }
+                List{
+                    Section(header: Text("説明")){
+                        if !taskDetailViewModel.task.desc.isEmpty{
+                            Text("\(taskDetailViewModel.task.desc)")
+                        }else{
+                            Text("このタスクの説明はありません。").foregroundColor(Color.gray)
+                        }
+                    }
+                    Section(header: Text("詳細情報")){
+                        HStack{
+                            Text("ステータス")
+                            Spacer()
+                            switch taskDetailViewModel.task.status {
+                            case "completed":
+                                Text("完了")
+                            case "scheduled":
+                                Text("実行予定")
+                            case "abandoned":
+                                Text("断念")
+                            default:
+                                Text("未設定")
+                            }
+                        }
+                        HStack{
+                            Text("開始予定")
+                            Spacer()
+                            if let scheduledBeginDate = taskDetailViewModel.task.scheduled_begin_dt {
+                                Text(dateFormatter.string(from: scheduledBeginDate))
+                            } else {
+                                Text("No schedule")
+                            }
+                        }
+                        HStack{
+                            Text("終了予定")
+                            Spacer()
+                            if let scheduledEndDate = taskDetailViewModel.task.scheduled_end_dt {
+                                Text(dateFormatter.string(from: scheduledEndDate))
+                            } else {
+                                Text("No schedule")
+                            }
+                        }
+                        HStack{
+                            Text("期日")
+                            Spacer()
+                            if let expiredDate = taskDetailViewModel.task.expired_dt {
+                                Text(dateFormatter.string(from: expiredDate))
+                            } else {
+                                Text("No expire")
+                            }
+                        }
+                        HStack{
+                            Text("作成日時")
+                            Spacer()
+                            if !taskDetailViewModel.task.isFault {
+                                Text(dateFormatter.string(from: taskDetailViewModel.task.created_dt))
+                            }
+                        }
+                        HStack{
+                            Text("最終更新日")
+                            Spacer()
+                            if let updatedDate = taskDetailViewModel.task.updated_dt {
+                                Text(dateFormatter.string(from: updatedDate))
+                            } else {
+                                Text("No data")
+                            }
+                        }
+                    }
+                    if let activities = taskDetailViewModel.task.activities?.allObjects as? [Activity], !activities.isEmpty {
+                        Section(header: Text("アクティビティ一覧")) {
+                            ForEach(activities, id: \.self) { activity in
+                                Button {
+                                    isActivityPresented = true
+                                } label: {
+                                    ActivityCardView(activity: activity)
+                                        .padding(.vertical, 10)
+                                        .foregroundColor(.black)
+                                }.navigationDestination(isPresented: $isActivityPresented){
+                                    ActivityDetailView(activity: activity)
+                                }
+                            }.listRowInsets(EdgeInsets())
+                        }
+                    } else {
+                        Section(header: Text("アクティビティ一覧")) {
+                            Text("関連づけられたアクティビティは存在しません。")
+                                .foregroundColor(Color.gray)
+                        }
+                    }
+                }
+                .frame( maxWidth: .infinity)
+                .edgesIgnoringSafeArea(.all)
+                .listStyle(GroupedListStyle())
+            }
+            .padding(10)
+            .background(Color(.systemGray6))
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text("タスク詳細")
+                        .fontWeight(.semibold)
+                }
+            }
+            FloatingButton(floatBtnSelected: $taskFloetBtnSelected, taskDetailViewModel: taskDetailViewModel)
+            
+        }
+
+    }
+    
+
     
 }
