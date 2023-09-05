@@ -5,23 +5,292 @@ struct TaskDetailView: View {
     let task : Task
     
     @State var taskFloetBtnSelected = false
-    @State var isTaskEditModalPresented = false
-    @State var isTaskCreateByCopyModalPresented = false
-    @State var isActivityCreateModalPresented = false
-    @State var isTaskDeleteActionSheet = false
+
     @State var isActivityPresented : Bool = false
-    @Environment(\.presentationMode) var presentationMode
     @StateObject private var taskDetailViewModel: TaskDetailViewModel
     
     init(task: Task) {
         self.task = task
         _taskDetailViewModel = StateObject(wrappedValue: TaskDetailViewModel(task: task))
     }
+        
+    struct FloatingButton : View {
+        
+        @Binding var floatBtnSelected : Bool
+        @ObservedObject var taskDetailViewModel : TaskDetailViewModel
+        
+        var body: some View {
+            VStack{
+                Spacer()
+                if(floatBtnSelected){
+                    VStack{
+                        TaskEditOpener(floatBtnSelected: $floatBtnSelected, taskDetailViewModel: taskDetailViewModel )
+                        TaskCopyCreateOpener(floatBtnSelected: $floatBtnSelected, taskDetailViewModel: taskDetailViewModel)
+                        ActivityCreateOpener(floatBtnSelected: $floatBtnSelected, taskDetailViewModel: taskDetailViewModel)
+                    }
+                }
+
+                HStack {
+                    Spacer()
+                    Button(action: {
+                        withAnimation(.easeInOut) {
+                            floatBtnSelected.toggle()
+                        }
+                    }, label: {
+                        Image(systemName: floatBtnSelected ? "xmark" : "pencil")
+                            .foregroundColor(.black)
+                            .font(.system(size: 24))
+                    })
+                    .frame(width: 60, height: 60)
+                    .background(Color(.systemGray6))
+                    .cornerRadius(30.0)
+                    .shadow(color: .gray, radius: 3, x: 3, y: 3)
+                    .padding(EdgeInsets(top: 0, leading: 0, bottom: 16.0, trailing: 16.0))
+                }
+            }
+
+        }
+        
+    }
     
-    var dateFormatter: DateFormatter {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "YYYY/MM/dd HH:mm"
-        return formatter
+    struct TaskEditOpener : View {
+        @State var isTaskEditModalPresented = false
+        @Binding var floatBtnSelected : Bool
+        @ObservedObject var taskDetailViewModel : TaskDetailViewModel
+
+        var body: some View {
+            HStack{
+                Spacer()
+                Button(action:{
+                    isTaskEditModalPresented = true
+                } ) {
+                    Spacer()
+                    ZStack{
+                        Circle()
+                            .foregroundColor(.blue)
+                            .frame(width: 32, height: 32)
+                        Image(systemName: "book")
+                            .foregroundColor(.white)
+                            .font(.system(size: 12))
+                    }
+                    Text("タスクを編集")
+                        .foregroundColor(.white)
+                        .font(.caption)
+                        .padding(4)
+                        .frame(maxWidth: .infinity)
+                        .background(Color.blue)
+                        .cornerRadius(3)
+                }
+                .frame(width: 240, height: 20)
+                .padding(EdgeInsets(top: 0, leading: 0, bottom: 16.0, trailing: 16.0))
+            }
+            .sheet(isPresented: $isTaskEditModalPresented, content: {
+                TaskEditView(
+                    isModalPresented: $isTaskEditModalPresented,
+                    isFloatBtnSelected: $floatBtnSelected,
+                    id: taskDetailViewModel.task.id,
+                    title: taskDetailViewModel.task.name ,
+                    desc: taskDetailViewModel.task.desc ,
+                    startDate: taskDetailViewModel.task.scheduled_begin_dt ?? Date(),
+                    endDate: taskDetailViewModel.task.scheduled_end_dt ?? Date(),
+                    expiredDate: taskDetailViewModel.task.expired_dt ?? Date(),
+                    status: taskDetailViewModel.task.status ,
+                    task: taskDetailViewModel.task
+                )
+            })
+        }
+    }
+    
+    struct TaskCopyCreateOpener : View {
+        @State var isTaskCreateByCopyModalPresented = false
+        @Binding var floatBtnSelected : Bool
+        @ObservedObject var taskDetailViewModel : TaskDetailViewModel
+        
+        var body: some View {
+            HStack{
+                Spacer()
+                Button(action:{
+                    isTaskCreateByCopyModalPresented = true
+                } ) {
+                    Spacer()
+                    ZStack{
+                        Circle()
+                            .foregroundColor(.blue)
+                            .frame(width: 32, height: 32)
+                        Image(systemName: "doc.on.clipboard")
+                            .foregroundColor(.white)
+                            .font(.system(size: 12))
+                    }
+                    Text("タスクをコピーして新規作成")
+                        .foregroundColor(.white)
+                        .font(.caption)
+                        .padding(4)
+                        .frame(maxWidth: .infinity)
+                        .background(Color.blue)
+                        .cornerRadius(3)
+                }
+                .frame(width: 240, height: 20)
+                .padding(EdgeInsets(top: 0, leading: 0, bottom: 16.0, trailing: 16.0))
+            }
+            .sheet(isPresented: $isTaskCreateByCopyModalPresented, content: {
+                TaskEditView(
+                    isModalPresented: $isTaskCreateByCopyModalPresented,
+                    isFloatBtnSelected: $floatBtnSelected,
+                    title: taskDetailViewModel.task.name ,
+                    desc: taskDetailViewModel.task.desc ,
+                    startDate: taskDetailViewModel.task.scheduled_begin_dt ?? Date(),
+                    endDate: taskDetailViewModel.task.scheduled_end_dt ?? Date(),
+                    expiredDate: taskDetailViewModel.task.expired_dt ?? Date(),
+                    status: taskDetailViewModel.task.status ,
+                    project: taskDetailViewModel.task.project
+                )
+            })
+        }
+        
+    }
+    
+    struct ActivityCreateOpener : View {
+        @State var isActivityCreateModalPresented = false
+        @Binding var floatBtnSelected : Bool
+        @ObservedObject var taskDetailViewModel : TaskDetailViewModel
+        
+        var body: some View {
+            HStack{
+                Spacer()
+                Button(action:{
+                    isActivityCreateModalPresented = true
+                } ) {
+                    Spacer()
+                    ZStack{
+                        Circle()
+                            .foregroundColor(.blue)
+                            .frame(width: 32, height: 32)
+                        Image(systemName: "plus")
+                            .foregroundColor(.white)
+                            .font(.system(size: 12))
+                    }
+                    Text("アクティビティを追加")
+                        .foregroundColor(.white)
+                        .font(.caption)
+                        .padding(4)
+                        .frame(maxWidth: .infinity)
+                        .background(Color.blue)
+                        .cornerRadius(3)
+                }
+                .frame(width: 240, height: 20)
+                .padding(EdgeInsets(top: 0, leading: 0, bottom: 16.0, trailing: 16.0))
+            }
+            .sheet(isPresented: $isActivityCreateModalPresented, content: {
+                ActivityEditView(
+                    isModalPresented: $isActivityCreateModalPresented,
+                    isFloatBtnSelected: $floatBtnSelected,
+                    project: taskDetailViewModel.task.project,
+                    task: taskDetailViewModel.task,
+                    activity: nil
+                )
+            })
+
+        }
+    }
+    
+    struct TaskDeleteOpener : View {
+        
+        @State var isTaskDeleteActionSheet = false
+        @Environment(\.presentationMode) var presentationMode
+        @ObservedObject var taskDetailViewModel : TaskDetailViewModel
+
+        var body: some View {
+            HStack{
+                Spacer()
+                Button(action:{
+                    isTaskDeleteActionSheet = true
+                } ) {
+                    Spacer()
+                    ZStack{
+                        Circle()
+                            .foregroundColor(.blue)
+                            .frame(width: 32, height: 32)
+                        Image(systemName: "trash.fill")
+                            .foregroundColor(.white)
+                            .font(.system(size: 12))
+                    }
+                    Text("タスクを削除")
+                        .foregroundColor(.white)
+                        .font(.caption)
+                        .padding(4)
+                        .frame(maxWidth: .infinity)
+                        .background(Color.blue)
+                        .cornerRadius(3)
+                }
+                .frame(width: 240, height: 20)
+                .padding(EdgeInsets(top: 0, leading: 0, bottom: 16.0, trailing: 16.0))
+            }.actionSheet(isPresented: $isTaskDeleteActionSheet){
+                let activityCount = TaskViewModel().numberOfActivities(for: taskDetailViewModel.task)
+
+                if activityCount > 0 {
+                    return ActionSheet(
+                        title: Text("タスクの削除"),
+                        message: Text("このタスクには\(activityCount) 件のアクティビティが関連づけられています。 関連づけられたアイテムごと削除しますか？"),
+                        buttons: [
+                            .destructive(Text("関連アイテムごと削除"), action: {
+                                TaskViewModel().deleteTaskWithRelatedItems(taskDetailViewModel.task)
+                                presentationMode.wrappedValue.dismiss()
+                            }),
+                            .destructive(Text("タスクのみ削除"), action: {
+                                TaskViewModel().deleteTask(taskDetailViewModel.task)
+                                presentationMode.wrappedValue.dismiss()
+                            }),
+                            .cancel()
+                        ]
+                    )
+                } else {
+                    return ActionSheet(
+                        title: Text("タスクの削除"),
+                        message: Text("このタスクを削除してよろしいですか？"),
+                        buttons: [
+                            .destructive(Text("削除"), action: {
+                                TaskViewModel().deleteTask(taskDetailViewModel.task)
+                                presentationMode.wrappedValue.dismiss()
+                            }),
+                            .cancel()
+                        ]
+                    )
+                }
+            }
+            
+        }
+        
+    }
+    
+    struct ActivityListView : View {
+        
+        @ObservedObject var taskDetailViewModel : TaskDetailViewModel
+        @State var isActivityPresented : Bool = false
+        
+        var body: some View {
+            
+            if let activities = taskDetailViewModel.task.activities?.allObjects as? [Activity], !activities.isEmpty {
+                Section(header: Text("アクティビティ一覧")) {
+                    ForEach(activities, id: \.self) { activity in
+                        Button {
+                            isActivityPresented = true
+                        } label: {
+                            ActivityCardView(activity: activity)
+                                .padding(.vertical, 10)
+                                .foregroundColor(.black)
+                        }.navigationDestination(isPresented: $isActivityPresented){
+                            ActivityDetailView(activity: activity)
+                        }
+                    }.listRowInsets(EdgeInsets())
+                }
+            } else {
+                Section(header: Text("アクティビティ一覧")) {
+                    Text("関連づけられたアクティビティは存在しません。")
+                        .foregroundColor(Color.gray)
+                }
+            }
+
+        }
     }
     
     var body: some View {
@@ -71,7 +340,7 @@ struct TaskDetailView: View {
                             Text("開始予定")
                             Spacer()
                             if let scheduledBeginDate = taskDetailViewModel.task.scheduled_begin_dt {
-                                Text(dateFormatter.string(from: scheduledBeginDate))
+                                Text(DateFormatter.customFormat.string(from: scheduledBeginDate))
                             } else {
                                 Text("No schedule")
                             }
@@ -80,7 +349,7 @@ struct TaskDetailView: View {
                             Text("終了予定")
                             Spacer()
                             if let scheduledEndDate = taskDetailViewModel.task.scheduled_end_dt {
-                                Text(dateFormatter.string(from: scheduledEndDate))
+                                Text(DateFormatter.customFormat.string(from: scheduledEndDate))
                             } else {
                                 Text("No schedule")
                             }
@@ -89,7 +358,7 @@ struct TaskDetailView: View {
                             Text("期日")
                             Spacer()
                             if let expiredDate = taskDetailViewModel.task.expired_dt {
-                                Text(dateFormatter.string(from: expiredDate))
+                                Text(DateFormatter.customFormat.string(from: expiredDate))
                             } else {
                                 Text("No expire")
                             }
@@ -98,39 +367,21 @@ struct TaskDetailView: View {
                             Text("作成日時")
                             Spacer()
                             if !taskDetailViewModel.task.isFault {
-                                Text(dateFormatter.string(from: taskDetailViewModel.task.created_dt))
+                                Text(DateFormatter.customFormat.string(from: taskDetailViewModel.task.created_dt))
                             }
                         }
                         HStack{
                             Text("最終更新日")
                             Spacer()
                             if let updatedDate = taskDetailViewModel.task.updated_dt {
-                                Text(dateFormatter.string(from: updatedDate))
+                                Text(DateFormatter.customFormat.string(from: updatedDate))
                             } else {
                                 Text("No data")
                             }
                         }
                     }
-                    if let activities = taskDetailViewModel.task.activities?.allObjects as? [Activity], !activities.isEmpty {
-                        Section(header: Text("アクティビティ一覧")) {
-                            ForEach(activities, id: \.self) { activity in
-                                Button {
-                                    isActivityPresented = true
-                                } label: {
-                                    ActivityCardView(activity: activity)
-                                        .padding(.vertical, 10)
-                                        .foregroundColor(.black)
-                                }.navigationDestination(isPresented: $isActivityPresented){
-                                    ActivityDetailView(activity: activity)
-                                }
-                            }.listRowInsets(EdgeInsets())
-                        }
-                    } else {
-                        Section(header: Text("アクティビティ一覧")) {
-                            Text("関連づけられたアクティビティは存在しません。")
-                                .foregroundColor(Color.gray)
-                        }
-                    }
+                    ActivityListView(taskDetailViewModel: taskDetailViewModel)
+
                 }
                 .frame( maxWidth: .infinity)
                 .edgesIgnoringSafeArea(.all)
@@ -145,201 +396,12 @@ struct TaskDetailView: View {
                         .fontWeight(.semibold)
                 }
             }
-            VStack{
-                Spacer()
-                if(taskFloetBtnSelected){
-                    VStack{
-                        HStack{
-                            Spacer()
-                            Button(action:{
-                                isTaskEditModalPresented = true
-                            } ) {
-                                Spacer()
-                                ZStack{
-                                    Circle()
-                                        .foregroundColor(.blue)
-                                        .frame(width: 32, height: 32)
-                                    Image(systemName: "book")
-                                        .foregroundColor(.white)
-                                        .font(.system(size: 12))
-                                }
-                                Text("タスクを編集")
-                                    .foregroundColor(.white)
-                                    .font(.caption)
-                                    .padding(4)
-                                    .frame(maxWidth: .infinity)
-                                    .background(Color.blue)
-                                    .cornerRadius(3)
-                            }
-                            .frame(width: 240, height: 20)
-                            .padding(EdgeInsets(top: 0, leading: 0, bottom: 16.0, trailing: 16.0))
-                        }
-                        HStack{
-                            Spacer()
-                            Button(action:{
-                                isTaskCreateByCopyModalPresented = true
-                            } ) {
-                                Spacer()
-                                ZStack{
-                                    Circle()
-                                        .foregroundColor(.blue)
-                                        .frame(width: 32, height: 32)
-                                    Image(systemName: "doc.on.clipboard")
-                                        .foregroundColor(.white)
-                                        .font(.system(size: 12))
-                                }
-                                Text("タスクをコピーして新規作成")
-                                    .foregroundColor(.white)
-                                    .font(.caption)
-                                    .padding(4)
-                                    .frame(maxWidth: .infinity)
-                                    .background(Color.blue)
-                                    .cornerRadius(3)
-                            }
-                            .frame(width: 240, height: 20)
-                            .padding(EdgeInsets(top: 0, leading: 0, bottom: 16.0, trailing: 16.0))
-                        }
-                        HStack{
-                            Spacer()
-                            Button(action:{
-                                isActivityCreateModalPresented = true
-                            } ) {
-                                Spacer()
-                                ZStack{
-                                    Circle()
-                                        .foregroundColor(.blue)
-                                        .frame(width: 32, height: 32)
-                                    Image(systemName: "plus")
-                                        .foregroundColor(.white)
-                                        .font(.system(size: 12))
-                                }
-                                Text("アクティビティを追加")
-                                    .foregroundColor(.white)
-                                    .font(.caption)
-                                    .padding(4)
-                                    .frame(maxWidth: .infinity)
-                                    .background(Color.blue)
-                                    .cornerRadius(3)
-                            }
-                            .frame(width: 240, height: 20)
-                            .padding(EdgeInsets(top: 0, leading: 0, bottom: 16.0, trailing: 16.0))
-                        }
-                        HStack{
-                            Spacer()
-                            Button(action:{
-                                isTaskDeleteActionSheet = true
-                            } ) {
-                                Spacer()
-                                ZStack{
-                                    Circle()
-                                        .foregroundColor(.blue)
-                                        .frame(width: 32, height: 32)
-                                    Image(systemName: "trash.fill")
-                                        .foregroundColor(.white)
-                                        .font(.system(size: 12))
-                                }
-                                Text("タスクを削除")
-                                    .foregroundColor(.white)
-                                    .font(.caption)
-                                    .padding(4)
-                                    .frame(maxWidth: .infinity)
-                                    .background(Color.blue)
-                                    .cornerRadius(3)
-                            }
-                            .frame(width: 240, height: 20)
-                            .padding(EdgeInsets(top: 0, leading: 0, bottom: 16.0, trailing: 16.0))
-                        }.actionSheet(isPresented: $isTaskDeleteActionSheet){
-                            let activityCount = TaskViewModel().numberOfActivities(for: taskDetailViewModel.task)
-
-                            if activityCount > 0 {
-                                return ActionSheet(
-                                    title: Text("タスクの削除"),
-                                    message: Text("このタスクには\(activityCount) 件のアクティビティが関連づけられています。 関連づけられたアイテムごと削除しますか？"),
-                                    buttons: [
-                                        .destructive(Text("関連アイテムごと削除"), action: {
-                                            TaskViewModel().deleteTaskWithRelatedItems(taskDetailViewModel.task)
-                                            presentationMode.wrappedValue.dismiss()
-                                        }),
-                                        .destructive(Text("タスクのみ削除"), action: {
-                                            TaskViewModel().deleteTask(taskDetailViewModel.task)
-                                            presentationMode.wrappedValue.dismiss()
-                                        }),
-                                        .cancel()
-                                    ]
-                                )
-                            } else {
-                                return ActionSheet(
-                                    title: Text("タスクの削除"),
-                                    message: Text("このタスクを削除してよろしいですか？"),
-                                    buttons: [
-                                        .destructive(Text("削除"), action: {
-                                            TaskViewModel().deleteTask(taskDetailViewModel.task)
-                                            presentationMode.wrappedValue.dismiss()
-                                        }),
-                                        .cancel()
-                                    ]
-                                )
-                            }
-                        }
-
-                    }
-                }
-
-                HStack {
-                    Spacer()
-                    Button(action: {
-                        withAnimation(.easeInOut) {
-                            taskFloetBtnSelected.toggle()
-                        }
-                    }, label: {
-                        Image(systemName: taskFloetBtnSelected ? "xmark" : "pencil")
-                            .foregroundColor(.black)
-                            .font(.system(size: 24))
-                    })
-                    .frame(width: 60, height: 60)
-                    .background(Color(.systemGray6))
-                    .cornerRadius(30.0)
-                    .shadow(color: .gray, radius: 3, x: 3, y: 3)
-                    .padding(EdgeInsets(top: 0, leading: 0, bottom: 16.0, trailing: 16.0))
-                }
-            }
+            FloatingButton(floatBtnSelected: $taskFloetBtnSelected, taskDetailViewModel: taskDetailViewModel)
             
         }
-        .sheet(isPresented: $isTaskEditModalPresented, content: {
-            TaskEditView(
-                isModalPresented: $isTaskEditModalPresented,
-                isFloatBtnSelected: $taskFloetBtnSelected,
-                id: taskDetailViewModel.task.id,
-                title: taskDetailViewModel.task.name ,
-                desc: taskDetailViewModel.task.desc ,
-                startDate: taskDetailViewModel.task.scheduled_begin_dt ?? Date(),
-                endDate: taskDetailViewModel.task.scheduled_end_dt ?? Date(),
-                expiredDate: taskDetailViewModel.task.expired_dt ?? Date(),
-                status: taskDetailViewModel.task.status ,
-                task: taskDetailViewModel.task
-            )
-        })
-        .sheet(isPresented: $isTaskCreateByCopyModalPresented, content: {
-            TaskEditView(
-                isModalPresented: $isTaskCreateByCopyModalPresented,
-                isFloatBtnSelected: $taskFloetBtnSelected,
-                title: taskDetailViewModel.task.name ,
-                desc: taskDetailViewModel.task.desc ,
-                startDate: taskDetailViewModel.task.scheduled_begin_dt ?? Date(),
-                endDate: taskDetailViewModel.task.scheduled_end_dt ?? Date(),
-                expiredDate: taskDetailViewModel.task.expired_dt ?? Date(),
-                status: taskDetailViewModel.task.status ,
-                project: taskDetailViewModel.task.project
-            )
-        })
-        .sheet(isPresented: $isActivityCreateModalPresented, content: {
-            ActivityEditView(
-                isModalPresented: $isActivityCreateModalPresented,
-                isFloatBtnSelected: $taskFloetBtnSelected,
-                project: taskDetailViewModel.task.project,
-                task: taskDetailViewModel.task,
-                activity: nil
-            )
-        })
+
     }
+    
+
+    
 }
