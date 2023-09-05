@@ -2,31 +2,23 @@ import SwiftUI
 
 struct TaskDetailView: View {
     
-    let task : Task
-    
+    @ObservedObject var task : Task
     @State var taskFloetBtnSelected = false
-
     @State var isActivityPresented : Bool = false
-    @StateObject private var taskDetailViewModel: TaskDetailViewModel
-    
-    init(task: Task) {
-        self.task = task
-        _taskDetailViewModel = StateObject(wrappedValue: TaskDetailViewModel(task: task))
-    }
-        
+            
     struct FloatingButton : View {
         
         @Binding var floatBtnSelected : Bool
-        @ObservedObject var taskDetailViewModel : TaskDetailViewModel
+        @ObservedObject var task : Task
         
         var body: some View {
             VStack{
                 Spacer()
                 if(floatBtnSelected){
                     VStack{
-                        TaskEditOpener(floatBtnSelected: $floatBtnSelected, taskDetailViewModel: taskDetailViewModel )
-                        TaskCopyCreateOpener(floatBtnSelected: $floatBtnSelected, taskDetailViewModel: taskDetailViewModel)
-                        ActivityCreateOpener(floatBtnSelected: $floatBtnSelected, taskDetailViewModel: taskDetailViewModel)
+                        TaskEditOpener(floatBtnSelected: $floatBtnSelected, task: task )
+                        TaskCopyCreateOpener(floatBtnSelected: $floatBtnSelected, task: task)
+                        ActivityCreateOpener(floatBtnSelected: $floatBtnSelected, task: task)
                     }
                 }
 
@@ -56,7 +48,7 @@ struct TaskDetailView: View {
     struct TaskEditOpener : View {
         @State var isTaskEditModalPresented = false
         @Binding var floatBtnSelected : Bool
-        @ObservedObject var taskDetailViewModel : TaskDetailViewModel
+        @ObservedObject var task : Task
 
         var body: some View {
             HStack{
@@ -88,14 +80,14 @@ struct TaskDetailView: View {
                 TaskEditView(
                     isModalPresented: $isTaskEditModalPresented,
                     isFloatBtnSelected: $floatBtnSelected,
-                    id: taskDetailViewModel.task.id,
-                    title: taskDetailViewModel.task.name ,
-                    desc: taskDetailViewModel.task.desc ,
-                    startDate: taskDetailViewModel.task.scheduled_begin_dt ?? Date(),
-                    endDate: taskDetailViewModel.task.scheduled_end_dt ?? Date(),
-                    expiredDate: taskDetailViewModel.task.expired_dt ?? Date(),
-                    status: taskDetailViewModel.task.status ,
-                    task: taskDetailViewModel.task
+                    id: task.id,
+                    title: task.name ,
+                    desc: task.desc ,
+                    startDate: task.scheduled_begin_dt ?? Date(),
+                    endDate: task.scheduled_end_dt ?? Date(),
+                    expiredDate: task.expired_dt ?? Date(),
+                    status: task.status,
+                    task: task
                 )
             })
         }
@@ -104,7 +96,7 @@ struct TaskDetailView: View {
     struct TaskCopyCreateOpener : View {
         @State var isTaskCreateByCopyModalPresented = false
         @Binding var floatBtnSelected : Bool
-        @ObservedObject var taskDetailViewModel : TaskDetailViewModel
+        @ObservedObject var task : Task
         
         var body: some View {
             HStack{
@@ -136,13 +128,13 @@ struct TaskDetailView: View {
                 TaskEditView(
                     isModalPresented: $isTaskCreateByCopyModalPresented,
                     isFloatBtnSelected: $floatBtnSelected,
-                    title: taskDetailViewModel.task.name ,
-                    desc: taskDetailViewModel.task.desc ,
-                    startDate: taskDetailViewModel.task.scheduled_begin_dt ?? Date(),
-                    endDate: taskDetailViewModel.task.scheduled_end_dt ?? Date(),
-                    expiredDate: taskDetailViewModel.task.expired_dt ?? Date(),
-                    status: taskDetailViewModel.task.status ,
-                    project: taskDetailViewModel.task.project
+                    title: task.name ,
+                    desc: task.desc ,
+                    startDate: task.scheduled_begin_dt ?? Date(),
+                    endDate: task.scheduled_end_dt ?? Date(),
+                    expiredDate: task.expired_dt ?? Date(),
+                    status: task.status ,
+                    project: task.project
                 )
             })
         }
@@ -152,7 +144,7 @@ struct TaskDetailView: View {
     struct ActivityCreateOpener : View {
         @State var isActivityCreateModalPresented = false
         @Binding var floatBtnSelected : Bool
-        @ObservedObject var taskDetailViewModel : TaskDetailViewModel
+        @ObservedObject var task : Task
         
         var body: some View {
             HStack{
@@ -184,8 +176,8 @@ struct TaskDetailView: View {
                 ActivityEditView(
                     isModalPresented: $isActivityCreateModalPresented,
                     isFloatBtnSelected: $floatBtnSelected,
-                    project: taskDetailViewModel.task.project,
-                    task: taskDetailViewModel.task,
+                    project: task.project,
+                    task: task,
                     activity: nil
                 )
             })
@@ -264,12 +256,12 @@ struct TaskDetailView: View {
     
     struct ActivityListView : View {
         
-        @ObservedObject var taskDetailViewModel : TaskDetailViewModel
+        @ObservedObject var task : Task
         @State var isActivityPresented : Bool = false
         
         var body: some View {
             
-            if let activities = taskDetailViewModel.task.activities?.allObjects as? [Activity], !activities.isEmpty {
+            if let activities = task.activities?.allObjects as? [Activity], !activities.isEmpty {
                 Section(header: Text("アクティビティ一覧")) {
                     ForEach(activities, id: \.self) { activity in
                         Button {
@@ -297,7 +289,7 @@ struct TaskDetailView: View {
         ZStack{
             VStack(alignment: .leading){
                 HStack{
-                    if let belongsToProjectName = taskDetailViewModel.task.project?.name as? String {
+                    if let belongsToProjectName = task.project?.name as? String {
                         Text("\(belongsToProjectName)").multilineTextAlignment(.leading)
                     } else {
                         Text("Unknown")
@@ -306,8 +298,8 @@ struct TaskDetailView: View {
                 }.font(.callout)
                     .padding(.bottom , 5)
                     .padding(.leading, 20)
-                if !taskDetailViewModel.task.name.isEmpty {
-                    Text("\(taskDetailViewModel.task.name)").font(.system(size: 20)).fontWeight(.semibold)
+                if !task.name.isEmpty {
+                    Text("\(task.name)").font(.system(size: 20)).fontWeight(.semibold)
                         .padding(.leading, 20)
                 }else{
                     Text("無題のタスク")
@@ -315,8 +307,8 @@ struct TaskDetailView: View {
                 }
                 List{
                     Section(header: Text("説明")){
-                        if !taskDetailViewModel.task.desc.isEmpty{
-                            Text("\(taskDetailViewModel.task.desc)")
+                        if !task.desc.isEmpty{
+                            Text("\(task.desc)")
                         }else{
                             Text("このタスクの説明はありません。").foregroundColor(Color.gray)
                         }
@@ -325,7 +317,7 @@ struct TaskDetailView: View {
                         HStack{
                             Text("ステータス")
                             Spacer()
-                            switch taskDetailViewModel.task.status {
+                            switch task.status {
                             case "completed":
                                 Text("完了")
                             case "scheduled":
@@ -339,7 +331,7 @@ struct TaskDetailView: View {
                         HStack{
                             Text("開始予定")
                             Spacer()
-                            if let scheduledBeginDate = taskDetailViewModel.task.scheduled_begin_dt {
+                            if let scheduledBeginDate = task.scheduled_begin_dt {
                                 Text(DateFormatter.customFormat.string(from: scheduledBeginDate))
                             } else {
                                 Text("No schedule")
@@ -348,7 +340,7 @@ struct TaskDetailView: View {
                         HStack{
                             Text("終了予定")
                             Spacer()
-                            if let scheduledEndDate = taskDetailViewModel.task.scheduled_end_dt {
+                            if let scheduledEndDate = task.scheduled_end_dt {
                                 Text(DateFormatter.customFormat.string(from: scheduledEndDate))
                             } else {
                                 Text("No schedule")
@@ -357,7 +349,7 @@ struct TaskDetailView: View {
                         HStack{
                             Text("期日")
                             Spacer()
-                            if let expiredDate = taskDetailViewModel.task.expired_dt {
+                            if let expiredDate = task.expired_dt {
                                 Text(DateFormatter.customFormat.string(from: expiredDate))
                             } else {
                                 Text("No expire")
@@ -366,21 +358,21 @@ struct TaskDetailView: View {
                         HStack{
                             Text("作成日時")
                             Spacer()
-                            if !taskDetailViewModel.task.isFault {
-                                Text(DateFormatter.customFormat.string(from: taskDetailViewModel.task.created_dt))
+                            if !task.isFault {
+                                Text(DateFormatter.customFormat.string(from: task.created_dt))
                             }
                         }
                         HStack{
                             Text("最終更新日")
                             Spacer()
-                            if let updatedDate = taskDetailViewModel.task.updated_dt {
+                            if let updatedDate = task.updated_dt {
                                 Text(DateFormatter.customFormat.string(from: updatedDate))
                             } else {
                                 Text("No data")
                             }
                         }
                     }
-                    ActivityListView(taskDetailViewModel: taskDetailViewModel)
+                    ActivityListView(task: task)
 
                 }
                 .frame( maxWidth: .infinity)
@@ -396,7 +388,7 @@ struct TaskDetailView: View {
                         .fontWeight(.semibold)
                 }
             }
-            FloatingButton(floatBtnSelected: $taskFloetBtnSelected, taskDetailViewModel: taskDetailViewModel)
+            FloatingButton(floatBtnSelected: $taskFloetBtnSelected, task: task)
             
         }
 
