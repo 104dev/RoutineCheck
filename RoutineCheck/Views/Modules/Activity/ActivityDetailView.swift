@@ -6,13 +6,7 @@ struct ActivityDetailView: View {
     @EnvironmentObject var activityViewModel : ActivityViewModel
     let activity : Activity
     @State private var activityFloetBtnSelected = false
-    @StateObject private var activityDetailViewModel: ActivityDetailViewModel
     
-    init(activity: Activity) {
-        self.activity = activity
-        _activityDetailViewModel = StateObject(wrappedValue: ActivityDetailViewModel(activity: activity))
-    }
-
     var body: some View {
         ZStack{
             VStack{
@@ -69,12 +63,12 @@ struct ActivityDetailView: View {
                     }
                 }
                 .background(Color(.systemGray6))
-            FloatingButton(activityDetailViewModel: activityDetailViewModel, floatBtnSelected: $activityFloetBtnSelected)
+            FloatingButton(activity: activity, floatBtnSelected: $activityFloetBtnSelected)
         }
     }
     
     struct FloatingButton : View {
-        @ObservedObject var activityDetailViewModel : ActivityDetailViewModel
+        @ObservedObject var activity : Activity
         @Binding var floatBtnSelected: Bool
         
         var body: some View {
@@ -82,9 +76,9 @@ struct ActivityDetailView: View {
                 Spacer()
                 if(floatBtnSelected){
                     VStack{
-                        ActivityEditOpener(floatBtnSelected: $floatBtnSelected, activityDetailViewModel: activityDetailViewModel)
+                        ActivityEditOpener(floatBtnSelected: $floatBtnSelected, activity: activity)
                         
-                        ActivityDeleteOpener(activityDetailViewModel: activityDetailViewModel)
+                        ActivityDeleteOpener(activity: activity)
                     }
                 }
                 
@@ -114,7 +108,7 @@ struct ActivityDetailView: View {
     struct ActivityEditOpener : View {
         @State private var isActivityEditModalPresented = false
         @Binding var floatBtnSelected : Bool
-        @ObservedObject var  activityDetailViewModel : ActivityDetailViewModel
+        @ObservedObject var  activity : Activity
         
         var body: some View {
             HStack{
@@ -146,7 +140,7 @@ struct ActivityDetailView: View {
                 ActivityEditView(
                     isModalPresented:$isActivityEditModalPresented, isFloatBtnSelected: $floatBtnSelected, project: nil,
                     task: nil,
-                    activity: activityDetailViewModel.activity
+                    activity: activity
                 )
             })
         }
@@ -155,7 +149,7 @@ struct ActivityDetailView: View {
     struct ActivityDeleteOpener : View {
         @State var isActivityDeleteActionSheet = false
         @Environment(\.presentationMode) var presentationMode
-        @ObservedObject var  activityDetailViewModel : ActivityDetailViewModel
+        @ObservedObject var  activity : Activity
         
         var body: some View {
             HStack{
@@ -188,7 +182,7 @@ struct ActivityDetailView: View {
                         message: Text("このアクティビティを削除してよろしいですか？"),
                         buttons: [
                             .destructive(Text("削除"), action: {
-                                ActivityViewModel().deleteActivity(activityDetailViewModel.activity)
+                                ActivityViewModel().deleteActivity(activity)
                                 presentationMode.wrappedValue.dismiss()
                             }),
                             .cancel()

@@ -7,18 +7,14 @@ struct ProjectDetailView: View {
     @State private var selectedItemType = AppConstants.ItemTypeRelatedToProject.task
     @State  var isPresented : Bool = false
     @State var projectFloatBtnSelected = false
-    @StateObject private var projectDetailViewModel: ProjectDetailViewModel
+    @ObservedObject var project : Project
     
-    init(project: Project) {
-        _projectDetailViewModel = StateObject(wrappedValue: ProjectDetailViewModel(project: project))
-    }
-        
     var body: some View {
         ZStack{
             VStack{
                 HStack{
-                    if !projectDetailViewModel.project.name.isEmpty {
-                        Text("\(projectDetailViewModel.project.name)").font(.system(size: 20)).fontWeight(.semibold)
+                    if !project.name.isEmpty {
+                        Text("\(project.name)").font(.system(size: 20)).fontWeight(.semibold)
                             .padding(.leading, 20)
                     }else{
                         Text("無題のプロジェクト")
@@ -29,14 +25,14 @@ struct ProjectDetailView: View {
                     .padding(.top , 20)
                 List{
                     Section(header: Text("説明")){
-                        if !projectDetailViewModel.project.desc.isEmpty {
-                            Text("\(projectDetailViewModel.project.desc)")
+                        if !project.desc.isEmpty {
+                            Text("\(project.desc)")
                         }else{
                             Text("このプロジェクトの説明はありません。").foregroundColor(Color.gray)
                         }
                     }.padding(.leading, 20)
                     SegmentedControl(selectedItemType: $selectedItemType, taskViewModel: taskViewModel, activityViewModel: activityViewModel)
-                    ItemListView(selectedItemType: $selectedItemType, isPresented: $isPresented, projectDetailViewModel: projectDetailViewModel)
+                    ItemListView(selectedItemType: $selectedItemType, isPresented: $isPresented, project: project)
                 }
                 .frame( maxWidth: .infinity)
                 .edgesIgnoringSafeArea(.all)
@@ -49,7 +45,7 @@ struct ProjectDetailView: View {
                     }
                 }
                 .background(Color(.systemGray6))
-            FloatingButton(projectDetailViewModel: projectDetailViewModel, floatBtnSelected: $projectFloatBtnSelected)
+            FloatingButton(project: project, floatBtnSelected: $projectFloatBtnSelected)
         }
         .onAppear() {
             taskViewModel.fetchTasks()
@@ -60,11 +56,11 @@ struct ProjectDetailView: View {
     struct ItemListView : View {
         @Binding var selectedItemType : AppConstants.ItemTypeRelatedToProject
         @Binding var isPresented : Bool
-        @ObservedObject var projectDetailViewModel : ProjectDetailViewModel
+        @ObservedObject var project: Project
         
         var body: some View {
             if(selectedItemType == .task){
-                if let projectTasks = projectDetailViewModel.project.tasks?.allObjects as? [Task], !projectTasks.isEmpty{
+                if let projectTasks = project.tasks?.allObjects as? [Task], !projectTasks.isEmpty{
                     ForEach(projectTasks, id: \.self) { task in
                         Button {
                             isPresented = true
@@ -80,7 +76,7 @@ struct ProjectDetailView: View {
                     Text("関連づけられたタスクがありません")
                 }
             }else if(selectedItemType == .activity){
-                if let projectActivities = projectDetailViewModel.project.activities?.allObjects as? [Activity] , !projectActivities.isEmpty {
+                if let projectActivities = project.activities?.allObjects as? [Activity] , !projectActivities.isEmpty {
                     ForEach(projectActivities, id: \.self) { activity in
                         Button {
                             isPresented = true
@@ -124,7 +120,7 @@ struct ProjectDetailView: View {
     }
     
     struct FloatingButton : View {
-        @ObservedObject var projectDetailViewModel : ProjectDetailViewModel
+        @ObservedObject var project : Project
         @Binding var floatBtnSelected: Bool
         
         var body : some View {
@@ -132,10 +128,10 @@ struct ProjectDetailView: View {
                 Spacer()
                 if(floatBtnSelected){
                     VStack{
-                        ProjectEditOpener(projectFloatBtnSelected: $floatBtnSelected, projectDetailViewModel: projectDetailViewModel)
-                        TaskCreateOpener(projectFloatBtnSelected: $floatBtnSelected, projectDetailViewModel: projectDetailViewModel)
-                        AcitivityCreateOpener(projectFloatBtnSelected: $floatBtnSelected, projectDetailViewModel: projectDetailViewModel)
-                        ProjectDeleteOpener(projectDetailViewModel: projectDetailViewModel)
+                        ProjectEditOpener(projectFloatBtnSelected: $floatBtnSelected, project: project)
+                        TaskCreateOpener(projectFloatBtnSelected: $floatBtnSelected, project: project)
+                        AcitivityCreateOpener(projectFloatBtnSelected: $floatBtnSelected, project: project)
+                        ProjectDeleteOpener(project: project)
                     }
                 }
                 HStack {
@@ -163,7 +159,7 @@ struct ProjectDetailView: View {
     struct ProjectEditOpener : View {
         @State var isProjectEditModalPresented = false
         @Binding var projectFloatBtnSelected : Bool
-        @ObservedObject var projectDetailViewModel : ProjectDetailViewModel
+        @ObservedObject var project : Project
         
         var body: some View {
             HStack{
@@ -194,7 +190,7 @@ struct ProjectDetailView: View {
             .sheet(isPresented: $isProjectEditModalPresented, content: {
                 ProjectEditView(
                     isModalPresented:$isProjectEditModalPresented, isFloatBtnSelected: $projectFloatBtnSelected,
-                    project: projectDetailViewModel.project
+                    project: project
                 )
             })
         }
@@ -204,7 +200,7 @@ struct ProjectDetailView: View {
     struct TaskCreateOpener : View {
         @State var isTaskCreateModalPresented = false
         @Binding var projectFloatBtnSelected : Bool
-        @ObservedObject var projectDetailViewModel : ProjectDetailViewModel
+        @ObservedObject var project : Project
 
         var body: some View {
             HStack{
@@ -236,7 +232,7 @@ struct ProjectDetailView: View {
                 TaskEditView(
                     isModalPresented: $isTaskCreateModalPresented,
                     isFloatBtnSelected: $projectFloatBtnSelected,
-                    project: projectDetailViewModel.project
+                    project: project
                 )
             })
 
@@ -246,7 +242,7 @@ struct ProjectDetailView: View {
     struct AcitivityCreateOpener : View {
         @State var isActivityCreateModalPresented = false
         @Binding var projectFloatBtnSelected : Bool
-        @ObservedObject var projectDetailViewModel : ProjectDetailViewModel
+        @ObservedObject var project : Project
 
         var body: some View {
             HStack{
@@ -277,7 +273,7 @@ struct ProjectDetailView: View {
             .sheet(isPresented: $isActivityCreateModalPresented, content: {
                 ActivityEditView(
                     isModalPresented:$isActivityCreateModalPresented, isFloatBtnSelected: $projectFloatBtnSelected,
-                    project: projectDetailViewModel.project,
+                    project: project,
                     task: nil,
                     activity: nil
                 )
@@ -289,7 +285,7 @@ struct ProjectDetailView: View {
     
     struct ProjectDeleteOpener : View {
         @State var isProjectDeleteActionSheet = false
-        @ObservedObject var projectDetailViewModel : ProjectDetailViewModel
+        @ObservedObject var project : Project
         @Environment(\.presentationMode) var presentationMode
         
         var body: some View {
@@ -318,8 +314,8 @@ struct ProjectDetailView: View {
                 .frame(width: 240, height: 20)
                 .padding(EdgeInsets(top: 0, leading: 0, bottom: 16.0, trailing: 16.0))
                 .actionSheet(isPresented: $isProjectDeleteActionSheet){
-                    let taskCount = ProjectViewModel().numberOfTasks(for: projectDetailViewModel.project)
-                    let activityCount = ProjectViewModel().numberOfActivities(for: projectDetailViewModel.project)
+                    let taskCount = ProjectViewModel().numberOfTasks(for: project)
+                    let activityCount = ProjectViewModel().numberOfActivities(for: project)
                     
                     if taskCount > 0 || activityCount > 0 {
                         return ActionSheet(
@@ -327,11 +323,11 @@ struct ProjectDetailView: View {
                             message: Text("このプロジェクトには \(taskCount) 件のタスクと \(activityCount) 件のアクティビティが関連づけられています。 関連づけられたアイテムごと削除しますか？"),
                             buttons: [
                                 .destructive(Text("関連アイテムごと削除"), action: {
-                                    ProjectViewModel().deleteWithRelatedItems(projectDetailViewModel.project)
+                                    ProjectViewModel().deleteWithRelatedItems(project)
                                     presentationMode.wrappedValue.dismiss()
                                 }),
                                 .destructive(Text("プロジェクトのみ削除"), action: {
-                                    ProjectViewModel().deleteProject(projectDetailViewModel.project)
+                                    ProjectViewModel().deleteProject(project)
                                     presentationMode.wrappedValue.dismiss()
                                 }),
                                 .cancel()
@@ -343,7 +339,7 @@ struct ProjectDetailView: View {
                             message: Text("このプロジェクトを削除してよろしいですか？"),
                             buttons: [
                                 .destructive(Text("削除"), action: {
-                                    ProjectViewModel().deleteProject(projectDetailViewModel.project)
+                                    ProjectViewModel().deleteProject(project)
                                     presentationMode.wrappedValue.dismiss()
                                 }),
                                 .cancel()
