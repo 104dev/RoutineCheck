@@ -16,31 +16,7 @@ struct ProjectDetailView: View {
     var body: some View {
         ZStack{
             VStack{
-                HStack{
-                    if !projectDetailViewModel.project.name.isEmpty {
-                        Text("\(projectDetailViewModel.project.name)").font(.system(size: 20)).fontWeight(.semibold)
-                            .padding(.leading, 20)
-                    }else{
-                        Text("無題のプロジェクト")
-                            .padding(.leading, 20)
-                    }
-                    Spacer()
-                }.padding(.leading)
-                    .padding(.top , 20)
-                List{
-                    Section(header: Text("説明")){
-                        if !projectDetailViewModel.project.desc.isEmpty {
-                            Text("\(projectDetailViewModel.project.desc)")
-                        }else{
-                            Text("このプロジェクトの説明はありません。").foregroundColor(Color.gray)
-                        }
-                    }.padding(.leading, 20)
-                    SegmentedControl(selectedItemType: $selectedItemType, taskViewModel: taskViewModel, activityViewModel: activityViewModel)
-                    ItemListView(selectedItemType: $selectedItemType, isPresented: $isPresented, projectDetailViewModel: projectDetailViewModel)
-                }
-                .frame( maxWidth: .infinity)
-                .edgesIgnoringSafeArea(.all)
-                .listStyle(GroupedListStyle())
+                ProjectInfoView(selectedItemType: $selectedItemType, isPresented: $isPresented, projectDetailViewModel: projectDetailViewModel, taskViewModel: taskViewModel, activityViewModel: activityViewModel)
             }.navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .principal) {
@@ -55,6 +31,47 @@ struct ProjectDetailView: View {
             taskViewModel.fetchTasks()
             activityViewModel.fetchActivities()
         }
+    }
+    
+    
+    struct ProjectInfoView : View {
+        
+        @Binding var selectedItemType : AppConstants.ItemTypeRelatedToProject
+        @Binding var isPresented : Bool
+        @ObservedObject var projectDetailViewModel : ProjectDetailViewModel
+        @ObservedObject var taskViewModel : TaskViewModel
+        @ObservedObject var activityViewModel : ActivityViewModel
+        
+        var body: some View {
+            
+            HStack{
+                if !projectDetailViewModel.project.name.isEmpty {
+                    Text("\(projectDetailViewModel.project.name)").font(.system(size: 20)).fontWeight(.semibold)
+                        .padding(.leading, 20)
+                }else{
+                    Text("無題のプロジェクト")
+                        .padding(.leading, 20)
+                }
+                Spacer()
+            }.padding(.leading)
+            .padding(.top , 20)
+            
+            List{
+                Section(header: Text("説明")){
+                    if !projectDetailViewModel.project.desc.isEmpty {
+                        Text("\(projectDetailViewModel.project.desc)")
+                    }else{
+                        Text("このプロジェクトの説明はありません。").foregroundColor(Color.gray)
+                    }
+                }.padding(.leading, 20)
+                SegmentedControl(selectedItemType: $selectedItemType, taskViewModel: taskViewModel, activityViewModel: activityViewModel)
+                ItemListView(selectedItemType: $selectedItemType, isPresented: $isPresented, projectDetailViewModel: projectDetailViewModel)
+            }
+            .frame( maxWidth: .infinity)
+            .edgesIgnoringSafeArea(.all)
+            .listStyle(GroupedListStyle())
+        }
+        
     }
     
     struct ItemListView : View {
