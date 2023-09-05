@@ -268,6 +268,37 @@ struct TaskDetailView: View {
         
     }
     
+    struct ActivityListView : View {
+        
+        @ObservedObject var taskDetailViewModel : TaskDetailViewModel
+        @State var isActivityPresented : Bool = false
+        
+        var body: some View {
+            
+            if let activities = taskDetailViewModel.task.activities?.allObjects as? [Activity], !activities.isEmpty {
+                Section(header: Text("アクティビティ一覧")) {
+                    ForEach(activities, id: \.self) { activity in
+                        Button {
+                            isActivityPresented = true
+                        } label: {
+                            ActivityCardView(activity: activity)
+                                .padding(.vertical, 10)
+                                .foregroundColor(.black)
+                        }.navigationDestination(isPresented: $isActivityPresented){
+                            ActivityDetailView(activity: activity)
+                        }
+                    }.listRowInsets(EdgeInsets())
+                }
+            } else {
+                Section(header: Text("アクティビティ一覧")) {
+                    Text("関連づけられたアクティビティは存在しません。")
+                        .foregroundColor(Color.gray)
+                }
+            }
+
+        }
+    }
+    
     var body: some View {
         ZStack{
             VStack(alignment: .leading){
@@ -355,26 +386,8 @@ struct TaskDetailView: View {
                             }
                         }
                     }
-                    if let activities = taskDetailViewModel.task.activities?.allObjects as? [Activity], !activities.isEmpty {
-                        Section(header: Text("アクティビティ一覧")) {
-                            ForEach(activities, id: \.self) { activity in
-                                Button {
-                                    isActivityPresented = true
-                                } label: {
-                                    ActivityCardView(activity: activity)
-                                        .padding(.vertical, 10)
-                                        .foregroundColor(.black)
-                                }.navigationDestination(isPresented: $isActivityPresented){
-                                    ActivityDetailView(activity: activity)
-                                }
-                            }.listRowInsets(EdgeInsets())
-                        }
-                    } else {
-                        Section(header: Text("アクティビティ一覧")) {
-                            Text("関連づけられたアクティビティは存在しません。")
-                                .foregroundColor(Color.gray)
-                        }
-                    }
+                    ActivityListView(taskDetailViewModel: taskDetailViewModel)
+
                 }
                 .frame( maxWidth: .infinity)
                 .edgesIgnoringSafeArea(.all)
