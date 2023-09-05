@@ -13,13 +13,7 @@ struct TaskDetailView: View {
         self.task = task
         _taskDetailViewModel = StateObject(wrappedValue: TaskDetailViewModel(task: task))
     }
-    
-    var dateFormatter: DateFormatter {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "YYYY/MM/dd HH:mm"
-        return formatter
-    }
-    
+        
     struct FloatingButton : View {
         
         @Binding var floatBtnSelected : Bool
@@ -346,7 +340,7 @@ struct TaskDetailView: View {
                             Text("開始予定")
                             Spacer()
                             if let scheduledBeginDate = taskDetailViewModel.task.scheduled_begin_dt {
-                                Text(dateFormatter.string(from: scheduledBeginDate))
+                                Text(DateFormatter.customFormat.string(from: scheduledBeginDate))
                             } else {
                                 Text("No schedule")
                             }
@@ -355,7 +349,7 @@ struct TaskDetailView: View {
                             Text("終了予定")
                             Spacer()
                             if let scheduledEndDate = taskDetailViewModel.task.scheduled_end_dt {
-                                Text(dateFormatter.string(from: scheduledEndDate))
+                                Text(DateFormatter.customFormat.string(from: scheduledEndDate))
                             } else {
                                 Text("No schedule")
                             }
@@ -364,7 +358,7 @@ struct TaskDetailView: View {
                             Text("期日")
                             Spacer()
                             if let expiredDate = taskDetailViewModel.task.expired_dt {
-                                Text(dateFormatter.string(from: expiredDate))
+                                Text(DateFormatter.customFormat.string(from: expiredDate))
                             } else {
                                 Text("No expire")
                             }
@@ -373,14 +367,14 @@ struct TaskDetailView: View {
                             Text("作成日時")
                             Spacer()
                             if !taskDetailViewModel.task.isFault {
-                                Text(dateFormatter.string(from: taskDetailViewModel.task.created_dt))
+                                Text(DateFormatter.customFormat.string(from: taskDetailViewModel.task.created_dt))
                             }
                         }
                         HStack{
                             Text("最終更新日")
                             Spacer()
                             if let updatedDate = taskDetailViewModel.task.updated_dt {
-                                Text(dateFormatter.string(from: updatedDate))
+                                Text(DateFormatter.customFormat.string(from: updatedDate))
                             } else {
                                 Text("No data")
                             }

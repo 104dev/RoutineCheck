@@ -13,13 +13,6 @@ struct ActivityDetailView: View {
         _activityDetailViewModel = StateObject(wrappedValue: ActivityDetailViewModel(activity: activity))
     }
 
-    
-    var dateFormatter: DateFormatter {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "YYYY/MM/dd HH:mm"
-        return formatter
-    }
-    
     var body: some View {
         ZStack{
             VStack{
@@ -47,14 +40,14 @@ struct ActivityDetailView: View {
                             Text("作成日時")
                             Spacer()
                             if !activity.isFault {
-                                Text(dateFormatter.string(from: activity.created_dt))
+                                Text(DateFormatter.customFormat.string(from: activity.created_dt))
                             }
                         }
                         HStack{
                             Text("最終更新日")
                             Spacer()
                             if let updatedDate = activity.updated_dt {
-                                Text(dateFormatter.string(from: updatedDate))
+                                Text(DateFormatter.customFormat.string(from: updatedDate))
                             } else {
                                 Text("No data")
                             }

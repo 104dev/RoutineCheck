@@ -3,12 +3,6 @@ import SwiftUI
 struct TaskCardView: View {
 
     var task : Task
-
-    var dateFormatter: DateFormatter {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "YYYY/MM/dd HH:mm"
-        return formatter
-    }
     
     var dateFormatterToTime: DateFormatter {
         let formatter = DateFormatter()
@@ -72,7 +66,7 @@ struct TaskCardView: View {
                         if let scheduledBeginDate = task.scheduled_begin_dt,
                            let scheduledEndDate = task.scheduled_end_dt {
                             HStack {
-                                Text(dateFormatter.string(from: scheduledBeginDate))
+                                Text(DateFormatter.customFormat.string(from: scheduledBeginDate))
                                 Text("-")
                                 Text(dateFormatterToTime.string(from: scheduledEndDate))
                             }
